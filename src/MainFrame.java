@@ -12,7 +12,7 @@ public class MainFrame extends JFrame {
     private FriendsActivityGUI friendsActivity;
     private MiddlePage middlePage;
     private JButton albumsButton;
-/////
+///////////////
     public MainFrame(){
         super();
         this.setTitle(WINDOWS_TITLE);
