@@ -14,7 +14,7 @@ public class MainFrame extends JFrame {
     private JButton albumsButton;
 
     public MainFrame(){
-
+        super();
         this.setTitle(WINDOWS_TITLE);
         this.setLayout(new BorderLayout());
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
