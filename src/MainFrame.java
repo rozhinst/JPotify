@@ -14,12 +14,13 @@ public class MainFrame extends JFrame {
     private JButton albumsButton;
 
     public MainFrame(){
-        super();
+
         this.setTitle(WINDOWS_TITLE);
         this.setLayout(new BorderLayout());
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setSize(WIDTH,HEIGHT);
         this.setLocation(X,Y);
+        this.getContentPane().setBackground(new Color(66,28,82) );
         library = new LibraryGUI();
         songbar = new SongbarGUI();
         middlePage = new MiddlePage();
@@ -29,6 +30,7 @@ public class MainFrame extends JFrame {
         this.add(new JScrollPane(songbar),BorderLayout.PAGE_END);
         this.add(new JScrollPane(friendsActivity),BorderLayout.EAST);
         this.add(new JScrollPane(middlePage),BorderLayout.CENTER);
+        this.setExtendedState(this.getExtendedState() | JFrame.MAXIMIZED_BOTH);
         setVisible(true);
 
     }

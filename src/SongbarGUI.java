@@ -1,4 +1,5 @@
 import javax.swing.*;
+import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 
@@ -10,40 +11,58 @@ public class SongbarGUI extends JPanel {
     private JButton next;
     private JButton shuffle;
     private JPanel playButtons;
-    private JLabel songbar;
-    private JPanel progressPanel;
+    private JPanel songbar;
     private JProgressBar bar;
+    private  JPanel barPanel;
     private JSlider volume;
     private JLabel artwork;
+    private ImageIcon artworkImage;
     public SongbarGUI() {
-        super();
+
+
         setLayout(new BorderLayout());
-        setBackground(Color.lightGray);
+
+
         setPreferredSize(new Dimension(20,100));
         playButtons = new JPanel();
-        progressPanel = new JPanel();
+        songbar = new JPanel();
+        playButtons.setBackground(new Color(66,28,82));
+
         artwork = new JLabel("artwork");
+        artwork.setPreferredSize(new Dimension(100,100));
+        artworkImage = new ImageIcon("C:\\Users\\hp\\JPotify\\src\\images1.jpg");
+        artwork.setIcon(artworkImage);
+
         playButtons.setLayout( new FlowLayout(FlowLayout.CENTER,10,3));
-        progressPanel.setLayout(new FlowLayout(FlowLayout.CENTER,10,3));
-        add(playButtons, NORTH);
-        add(progressPanel,CENTER);
-        add(artwork,WEST);
-        progressPanel.setBorder(new EmptyBorder(10,10,10,10));
+
+        songbar.setLayout(new BorderLayout());
+        add(songbar, CENTER);
+
+        add(artwork,BorderLayout.WEST);
+
         playButtons.setBorder(new EmptyBorder(10,10,10,10));
-        artwork.setBorder(new EmptyBorder(10,10,10,10));
+
         prev = new JButton("previous");
         next = new JButton( "next");
         pause = new JButton("pause/play");
         shuffle = new JButton("shuffle");
         bar = new JProgressBar();
+        barPanel = new JPanel();
         volume = new JSlider();
-        bar.setPreferredSize(new Dimension(200,10));
-        volume.setPreferredSize(new Dimension(80,10));
+
+       bar.setBackground(Color.LIGHT_GRAY);
+        bar.setPreferredSize(new Dimension(500,10));
+        barPanel.add(bar);
+        barPanel.setBackground((new Color(66,28,82)));
+        volume.setPreferredSize(new Dimension(200,10));
         playButtons.add(prev);
         playButtons.add(pause);
         playButtons.add(next);
         playButtons.add(shuffle);
-        progressPanel.add(bar);
-        progressPanel.add(volume);
+
+        songbar.add(playButtons,NORTH);
+        songbar.add(barPanel,CENTER);
+        volume.setBackground((new Color(66,28,82)));
+        this.add(volume, EAST);
     }
 }
