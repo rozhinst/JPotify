@@ -3,6 +3,7 @@ import com.mpatric.mp3agic.UnsupportedTagException;
 import javazoom.jl.decoder.JavaLayerException;
 import javax.sound.sampled.AudioFormat;
 import javax.swing.*;
+import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -16,16 +17,18 @@ import java.util.ArrayList;
 import static java.awt.BorderLayout.*;
 
 public class SongbarGUI extends JPanel {
+    private  JButton refresh;
     private JButton prev;
     private JButton pause;
     private JButton next;
     private JButton shuffle;
     private JPanel playButtons;
-    private JLabel songbar;
-    private JPanel progressPanel;
+    private JButton favorite;
+
     private JSlider bar;
     private JSlider volume;
     private JLabel artwork;
+    private JPanel songBar;
     private JPanel artPanel;
     private Handler handler;
     private TextNote details;
@@ -34,7 +37,7 @@ public class SongbarGUI extends JPanel {
     private int counter = 0;
     private MP3 mp3;
     private GetID3 id3;
-    private JPanel progressAndButtons;
+
     private String temp = "";
     private String path;
     private Songs songs;
@@ -46,68 +49,158 @@ public class SongbarGUI extends JPanel {
     private int sliderValue;
     private int songNum=0;
     private long totalTime;
+    private JPanel barPanel;
     private Thread t;
     Timer timer;
     public SongbarGUI() throws IOException, InvalidDataException, UnsupportedTagException {
         super();
-        path = "C:\\Users\\LENOVO\\Desktop\\JPotifyy\\src\\Ciara - Level Up.mp3";
-        setBackground(Color.lightGray);
+        //creating an empty border
+        Border emptyBorder = BorderFactory.createEmptyBorder();
+
+        songBar = new JPanel();
+        songBar.setLayout(new BorderLayout());
+        //Icons of playBottons
+        ImageIcon playIcon = new ImageIcon(new ImageIcon("src\\icons\\play.png").getImage().getScaledInstance(50, 50, Image.SCALE_DEFAULT));
+        ImageIcon pauseIcon = new ImageIcon(new ImageIcon("src\\icons\\pause-512.png").getImage().getScaledInstance(50, 50, Image.SCALE_DEFAULT));
+        ImageIcon nextIcon = new ImageIcon(new ImageIcon("src\\icons/next.png").getImage().getScaledInstance(20, 20, Image.SCALE_DEFAULT));
+        ImageIcon previousIcon = new ImageIcon(new ImageIcon("src\\icons\\previous.png").getImage().getScaledInstance(20, 20, Image.SCALE_DEFAULT));
+        ImageIcon shuffleIcon = new ImageIcon(new ImageIcon("src\\icons\\Shuffle-2-icon.png").getImage().getScaledInstance(20, 20, Image.SCALE_DEFAULT));
+        ImageIcon favoriteIcon = new ImageIcon(new ImageIcon("src\\icons\\favorite.png").getImage().getScaledInstance(20, 20, Image.SCALE_DEFAULT));
+        ImageIcon refreshIcon = new ImageIcon(new ImageIcon("src\\icons\\refresh.png").getImage().getScaledInstance(20, 20, Image.SCALE_DEFAULT));
+
+
+        setBackground(new Color(20,20,20));
+        //Layout of hole song bar
         setLayout(new BorderLayout());
-        setPreferredSize(new Dimension(20, 100));
+        setPreferredSize(new Dimension(100,120));
         songs = new Songs();
         metadata = new JPanel();
         playButtons = new JPanel();
-        progressPanel = new JPanel();
+      //  progressPanel = new JPanel();
         artPanel = new JPanel();
         artwork = new JLabel();
         detailPanel = new JPanel();
         duration = new JLabel();
         songPlaying = new JLabel("0:00");
-        playButtons.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 3));
-        progressPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 3));
+
         artPanel.setLayout(new GridLayout(1, 1));
-        progressAndButtons = new JPanel(new BorderLayout());
-        detailPanel.setPreferredSize(new Dimension(300, 500));
+
+
+        detailPanel.setPreferredSize(new Dimension(250,200));
+        artPanel.setBackground(new Color(20,20,20));
         detailPanel.setLayout(new GridLayout(1, 2));
         metadata.setLayout(new GridLayout(1, 1));
-        prev = new JButton("previous");
-        next = new JButton("next");
-        pause = new JButton("pause/play");
-        shuffle = new JButton("shuffle");
+        prev = new JButton();
+        next = new JButton();
+        pause = new JButton();
+        shuffle = new JButton();
+        favorite = new JButton();
+        refresh = new JButton();
         bar = new JSlider();
         volume = new JSlider();
         filePath = new ArrayList();
         vol = new SetVolume();
         timer = new Timer(1000, new Slider() );
 
-        bar.setPreferredSize(new Dimension(200, 10));
-        volume.setPreferredSize(new Dimension(80, 10));
-        metadata.setPreferredSize(new Dimension(500, 50));
+        pause.setIcon(playIcon);
+        pause.setBorder(emptyBorder);
+        pause.setBackground(new Color(20,20,20));
+        pause.setToolTipText("Play/Pause");
 
-        progressAndButtons.setBorder(new EmptyBorder(0, 0, 0, 200));
-        progressPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
-        playButtons.setBorder(new EmptyBorder(10, 10, 10, 10));
+        favorite.setIcon(favoriteIcon);
+        favorite.setBorder(emptyBorder);
+        favorite.setBackground(new Color(20,20,20));
+        favorite.setToolTipText("Add to favorite");
+
+        shuffle.setIcon(shuffleIcon);
+        shuffle.setBorder(emptyBorder);
+        shuffle.setBackground(new Color(20,20,20));
+        shuffle.setToolTipText("Shuffle");
+
+        next.setIcon(nextIcon);
+        next.setBorder(emptyBorder);
+        next.setBackground(new Color(20,20,20));
+        next.setToolTipText("Next Song");
+
+        prev.setIcon(previousIcon);
+        prev.setBorder(emptyBorder);
+        prev.setBackground(new Color(20,20,20));
+        prev.setToolTipText("Previous Song");
+
+        refresh.setIcon(refreshIcon);
+        refresh.setBorder(emptyBorder);
+        refresh.setBackground(new Color(20,20,20));
+        refresh.setToolTipText("Replay the Song");
+
+
+
+
+        volume.setPreferredSize(new Dimension(150,5));
+        volume.setBackground(new Color(20,20,20));
+        volume.setBorder(new EmptyBorder(50, 10, 10, 0));
+        metadata.setPreferredSize(new Dimension(500, 50));
+        metadata.setBackground(new Color(20,20,20));
+
+        playButtons.setBackground(new Color(20,20,20));
+        playButtons.setPreferredSize(new Dimension(100,70));
+        playButtons.setBorder(new EmptyBorder(10, 10, 10, 40));
+        playButtons.setLayout( new FlowLayout(FlowLayout.CENTER,10,5));
+        songBar.add(playButtons, BorderLayout.NORTH);
+
         artwork.setBorder(new EmptyBorder(10, 10, 10, 10));
+        artwork.setBackground(new Color(20,20,20));
+       // artwork.setPreferredSize(new Dimension(125,120));
+
+        bar.setBackground(new Color(20,20,20));
+        bar.setPreferredSize(new Dimension(500,10));
+        bar.setToolTipText("Seek Bar");
+
+
+
+     barPanel = new JPanel();
+       // barPanel.add(bar);
+        barPanel.setLayout( new FlowLayout(FlowLayout.CENTER,10,3));
+        barPanel.setBorder(new EmptyBorder(0, 10, 20, 50));
+        barPanel.setBackground(new Color(20,20,20));
+
+//
+//        barPanel.add(bar);
+//        barPanel.setBackground(new Color(20,20,20));
+
 
         detailPanel.add(artPanel);
+        detailPanel.setBackground(new Color(20,20,20));
+        //detailPanel.setBackground(new Color(20,20,20));
         detailPanel.add(metadata);
-        progressAndButtons.add(playButtons, NORTH);
-        progressAndButtons.add(progressPanel, CENTER);
+       // progressAndButtons.add(playButtons, NORTH);
+       // progressAndButtons.add(progressPanel, CENTER);
         add(detailPanel, WEST);
-        add(progressAndButtons, CENTER);
+        //add(progressAndButtons, CENTER);
         artPanel.add(artwork);
+
+        playButtons.add(shuffle);
         playButtons.add(prev);
         playButtons.add(pause);
         playButtons.add(next);
-        playButtons.add(shuffle);
-        progressPanel.add(songPlaying);
-        progressPanel.add(bar);
+        playButtons.add(refresh);
+        playButtons.add(favorite);
+        //playButtons.add(shuffle);
+//        progressPanel.add(songPlaying);
+//        progressPanel.add(barPanel);
+//        songBar.add(songPlaying, WEST);
+//        songBar.add(barPanel, BorderLayout.CENTER);
+//        songBar.add(duration, EAST);
+        barPanel.add(songPlaying);
+        barPanel.add(bar);
+        barPanel.add(duration);
+        songBar.add(barPanel,CENTER);
         add(volume, EAST);
+        add(songBar,CENTER);
         handler = new Handler();
         pause.addActionListener(handler);
         next.addActionListener(handler);
         prev.addActionListener(handler);
-        progressPanel.add(duration);
+       // progressPanel.add(duration);
         SkipMusic skip = new SkipMusic();
         sliderHandler = new SliderHandler();
         volume.addChangeListener(sliderHandler);

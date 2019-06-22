@@ -14,6 +14,7 @@ public class Albums extends Songs{
         super();
         ///yadet bashe aval song be album basheha!!!!!
         id3 = new GetID3(albumSong.get(0));
+
     }
     public BufferedImage showPicture(){
         return id3.getImg();
@@ -29,7 +30,7 @@ public class Albums extends Songs{
     public String getName(){
         return name;
     }
-    public void removeAlbumSongs(){
+    public void removeAlbumSongs() throws InvalidDataException, IOException, UnsupportedTagException {
         ArrayList<String> songs = (ArrayList<String>) this.reafFromFile();
         Iterator it = songs.iterator();
         String s;
