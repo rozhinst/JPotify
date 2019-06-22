@@ -38,7 +38,6 @@ public class MP3 implements Runnable {
         }
 
 
-
     }
     public void playLocation(int value){
         this.value = value;
