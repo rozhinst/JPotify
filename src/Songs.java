@@ -1,28 +1,41 @@
+import com.mpatric.mp3agic.InvalidDataException;
+import com.mpatric.mp3agic.UnsupportedTagException;
+
 import javax.swing.*;
 import java.io.*;
 import java.util.ArrayList;
 
 public class Songs implements Serializable {
-    private static final String filepath = "C:\\Users\\LENOVO\\Desktop\\JPotifyy\\songs\\song.txt";
+    private static final String filepath = "C:\\Users\\LENOVO\\Desktop\\JPotify\\JPotify\\src\\songs\\song.txt";
     private JFileChooser chooser;
     private ArrayList songs;
+    private String path;
+    private ArrayList<String> songNames;
     public Songs() {
         songs = new ArrayList();
         chooser = new JFileChooser("src");
         chooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
-
+        songNames = new ArrayList<>();
     }
-    public void addSong(ArrayList array){
+    public void addSong(ArrayList array) throws InvalidDataException, IOException, UnsupportedTagException {
         int r = chooser.showSaveDialog(null);
         if (r == JFileChooser.APPROVE_OPTION) {
             array.add(chooser.getSelectedFile().getAbsolutePath());
             songs = array;
             System.out.println("hjggkgkh "+chooser.getSelectedFile().getAbsolutePath());
+            GetID3 id3 = new GetID3(chooser.getSelectedFile().getAbsolutePath());
+            songNames.add(id3.getDetails().get(0));
         }
+    }
+    public void removeSongs(String s) throws InvalidDataException, IOException, UnsupportedTagException {
+        songs.remove(s);
+        GetID3 id3 = new GetID3(s);
+        songNames.remove(id3.getDetails().get(0));
     }
     public ArrayList getSongArrays(){
         return songs;
     }
+   // public void setPath()
     public void writeToFile(ArrayList arrayList){
         FileOutputStream fileOut;
         try {
@@ -56,7 +69,7 @@ public class Songs implements Serializable {
 
 }
 class Main1{
-   public static void main(String[] args) throws IOException {
+   public static void main(String[] args) throws IOException, InvalidDataException, UnsupportedTagException {
         Songs playList = new Songs();
        //playList.writeToFile();
        ArrayList a = (ArrayList) playList.reafFromFile();
