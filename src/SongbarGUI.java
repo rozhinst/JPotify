@@ -21,6 +21,7 @@ public class SongbarGUI extends JPanel {
 
 
         setLayout(new BorderLayout());
+
         setPreferredSize(new Dimension(20,100));
         playButtons = new JPanel();
         songbar = new JPanel();
