@@ -140,13 +140,6 @@ public class SongbarGUI extends JPanel {
         volume.setBorder(new EmptyBorder(50, 10, 10, 0));
         metadata.setPreferredSize(new Dimension(500, 50));
         metadata.setBackground(new Color(20,20,20));
-       // details.setForeground(Color.WHITE);
-
-//
-//        progressAndButtons.setBorder(new EmptyBorder(0, 0, 0, 200));
-//        progressAndButtons.setBackground(new Color(20,20,20));
-//        progressPanel.setBorder(new EmptyBorder(5, 10, 60, 10));
-//        progressPanel.setBackground(new Color(20,20,20));
 
         playButtons.setBackground(new Color(20,20,20));
         playButtons.setPreferredSize(new Dimension(100,70));
