@@ -33,6 +33,7 @@ public class MainFrame extends JFrame {
         this.add(new JScrollPane(songbar),BorderLayout.PAGE_END);
         this.add(new JScrollPane(friendsActivity),BorderLayout.EAST);
         this.add(new JScrollPane(middlePage),BorderLayout.CENTER);
+        this.setExtendedState(this.getExtendedState() | JFrame.MAXIMIZED_BOTH);
         setVisible(true);
 
     }

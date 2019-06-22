@@ -8,7 +8,7 @@ public class PlayList implements Serializable {
     private ArrayList<Songs> songList;
     private ArrayList<PlayList> playLists;
     private ArrayList<Songs> playListSongs;
-    private static final String filepath = "C:\\Users\\LENOVO\\Desktop\\JPotifyy\\playlists\\playlist.txt";
+    private static final String filepath = "JPotifyy\\playlists\\playlists.txt";
 
     public PlayList(){
         songs = new Songs();

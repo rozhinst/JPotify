@@ -3,7 +3,7 @@ import java.io.*;
 import java.util.ArrayList;
 
 public class Songs implements Serializable {
-    private static final String filepath = "C:\\Users\\LENOVO\\Desktop\\JPotifyy\\songs\\song.txt";
+    private static final String filepath = "C:\\Users\\hp\\JPotify\\src\\songs\\song.txt";
     private JFileChooser chooser;
     private ArrayList songs;
     public Songs() {
