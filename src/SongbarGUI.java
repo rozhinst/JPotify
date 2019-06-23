@@ -213,6 +213,7 @@ public class SongbarGUI extends JPanel {
     public static void setFilePath(ArrayList filePath1){
         filePath = filePath1;
     }
+
     public void newSong() throws InvalidDataException, IOException, UnsupportedTagException {
         sliderValue = 0;
         temp="";
