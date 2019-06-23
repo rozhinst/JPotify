@@ -280,6 +280,7 @@ public class SongbarGUI extends JPanel {
                     timer.restart();
                     pause.setIcon(pauseIcon);
 
+
                 }
                 else if (counter % 2 != 0){
                     mp3.resume();
