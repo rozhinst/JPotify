@@ -18,8 +18,9 @@
 *.zip
 *.tar.gz
 *.rar
+*.txt
 Albums.txt
-songs.txt
+song.txt
 SongNames.txt
 playlist.txt
 

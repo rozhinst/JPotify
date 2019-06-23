@@ -1,6 +1,13 @@
+import com.mpatric.mp3agic.InvalidDataException;
+import com.mpatric.mp3agic.UnsupportedTagException;
+
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.IOException;
+import java.util.ArrayList;
 
 public class LibraryGUI extends JPanel{
     private JButton song;
@@ -40,12 +47,42 @@ public class LibraryGUI extends JPanel{
 
         JSeparator sep = new JSeparator();
 
+        Handler handler = new Handler();
+
         add(label);
         add(addToLibrary);
         add(album);
         add(song);
         add(sep);
+        addToLibrary.addActionListener(handler);
 
+    }
+    public class Handler implements ActionListener{
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            if(e.getSource() ==  addToLibrary ){
+                Songs playList = new Songs();
+                ArrayList a = (ArrayList) playList.reafFromFile("C:\\Users\\LENOVO\\Desktop\\JPotify\\JPotify\\src\\songs\\song.txt");
+                ArrayList name = (ArrayList) playList.reafFromFile("C:\\Users\\LENOVO\\Desktop\\JPotify\\JPotify\\src\\songs\\SongNames.txt");
+                if(a==null)  a = new ArrayList();
+                if(name == null) name = new ArrayList();
+                try {
+                    playList.addSong(a,name);
+                } catch (InvalidDataException ex) {
+                    ex.printStackTrace();
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                } catch (UnsupportedTagException ex) {
+                    ex.printStackTrace();
+                }
+                playList.writeToFile(a,"src\\songs\\song.txt");
+                playList.writeToFile(name,"src\\songs\\SongNames.txt");
+                SongbarGUI.setFilePath((ArrayList) playList.reafFromFile("src\\songs\\song.txt"));
+                //playList.reafFromFile("C:\\Users\\LENOVO\\Desktop\\JPotify\\JPotify\\src\\songs\\SongNames.txt");
+
+            }
+        }
     }
 
 }

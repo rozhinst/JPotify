@@ -2,6 +2,8 @@ import javazoom.jl.decoder.JavaLayerException;
 import javazoom.jl.player.advanced.AdvancedPlayer;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.util.Random;
+
 public class MP3 implements Runnable {
     private int cnt;
     private int value;
@@ -15,6 +17,7 @@ public class MP3 implements Runnable {
         this.totalFrame = totalFrame;
         value = 0;
     }
+    public MP3(){}
 
     public void playMusic(Thread t){
             this.t = t;
@@ -45,5 +48,12 @@ public class MP3 implements Runnable {
     }
     public void stop(){
         t.stop();
+    }
+    public MP3 creatMP3(int counter,String path,GetID3 id3){
+        return new MP3(counter, (String) path, id3.getTotalFrames());
+    }
+    public int shuffle(int size){
+        Random random = new Random();
+        return random.nextInt(size);
     }
 }

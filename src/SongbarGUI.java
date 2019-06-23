@@ -39,7 +39,7 @@ public class SongbarGUI extends JPanel {
     private JPanel songBar;
     private JPanel artPanel;
     private Handler handler;
-    private JTextArea details;
+    private TextNote details;
     private JPanel detailPanel;
     private JPanel metadata;
     private int counter = 0;
@@ -208,11 +208,16 @@ public class SongbarGUI extends JPanel {
         filePath = (ArrayList) songs.reafFromFile("src\\songs\\song.txt");
         newSong();
     }
+
     public void newSong() throws InvalidDataException, IOException, UnsupportedTagException {
         sliderValue = 0;
         temp="";
         System.out.println((String) filePath.get(songNum));
         id3 = new GetID3((String) filePath.get(songNum));
+        for (int i = 0; i < id3.getDetails().size() - 1; i++) {
+            temp += id3.getDetails().get(i);
+            System.out.print(id3.getDetails().get(i));
+        }
         totalTime =id3.getMp3File().getLengthInSeconds();
         bar.setMaximum((int)id3.getMp3File().getLengthInSeconds());
         System.out.println("frames:"+id3.getTotalFrames());
@@ -221,22 +226,13 @@ public class SongbarGUI extends JPanel {
         duration.setText(s[1]);
         mp3 = new MP3(counter, (String) filePath.get(songNum), id3.getTotalFrames());
         t = new Thread(mp3);
-        details = new JTextArea();
-        for (int i = 0; i < id3.getDetails().size() - 1; i++) {
-            // temp += id3.getDetails().get(i);
-            details.append(id3.getDetails().get(i));
-            details.append("\n");
-            System.out.print(id3.getDetails().get(i));
-        }
-
+        details = new TextNote(temp);
         if(metadata.getComponentCount()!=0){
             metadata.remove(metadata.getComponent(0));
 
         }
         metadata.add(details);
         details.setPreferredSize(new Dimension(100, 50));
-        details.setBackground(new Color(20,20,20));
-        details.setForeground(Color.WHITE);
         Image newImage = id3.getImg().getScaledInstance(100, 100, Image.SCALE_SMOOTH);
         artwork.setIcon(new ImageIcon(newImage));
 
