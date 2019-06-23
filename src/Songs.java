@@ -17,14 +17,16 @@ public class Songs implements Serializable {
         chooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
         songNames = new ArrayList<>();
     }
-    public void addSong(ArrayList array) throws InvalidDataException, IOException, UnsupportedTagException {
+    public void addSong(ArrayList array,ArrayList name) throws InvalidDataException, IOException, UnsupportedTagException {
         int r = chooser.showSaveDialog(null);
         if (r == JFileChooser.APPROVE_OPTION) {
             array.add(chooser.getSelectedFile().getAbsolutePath());
             songs = array;
             System.out.println("hjggkgkh "+chooser.getSelectedFile().getAbsolutePath());
             GetID3 id3 = new GetID3(chooser.getSelectedFile().getAbsolutePath());
-            songNames.add(id3.getDetails().get(0));
+            name.add(id3.getDetails().get(0));
+            songNames = name;
+            System.out.println("namesssssss "+ id3.getDetails().get(0));
         }
     }
     public void removeSongs(String s) throws InvalidDataException, IOException, UnsupportedTagException {
@@ -35,11 +37,14 @@ public class Songs implements Serializable {
     public ArrayList getSongArrays(){
         return songs;
     }
+    public ArrayList getSongname(){
+        return songNames;
+    }
    // public void setPath()
-    public void writeToFile(ArrayList arrayList){
+    public void writeToFile(ArrayList arrayList,String path){
         FileOutputStream fileOut;
         try {
-            fileOut = new FileOutputStream(filepath);
+            fileOut = new FileOutputStream(path);
             ObjectOutputStream objectOut = new ObjectOutputStream(fileOut);
             objectOut.writeObject(arrayList);
             objectOut.close();
@@ -50,11 +55,11 @@ public class Songs implements Serializable {
             e.printStackTrace();
         }
     }
-    public Object reafFromFile() {
+    public Object reafFromFile(String path) {
         FileInputStream fileIn;
         try {
 
-            fileIn = new FileInputStream(filepath);
+            fileIn = new FileInputStream(path);
             ObjectInputStream objectIn = new ObjectInputStream(fileIn);
             Object obj = objectIn.readObject();
             System.out.println("The Object has been read from the file");
@@ -67,18 +72,22 @@ public class Songs implements Serializable {
         }
     }
 
+
 }
 class Main1{
    public static void main(String[] args) throws IOException, InvalidDataException, UnsupportedTagException {
         Songs playList = new Songs();
        //playList.writeToFile();
-       ArrayList a = (ArrayList) playList.reafFromFile();
+       ArrayList a = (ArrayList) playList.reafFromFile("C:\\Users\\LENOVO\\Desktop\\JPotify\\JPotify\\src\\songs\\song.txt");
+       ArrayList name = (ArrayList) playList.reafFromFile("C:\\Users\\LENOVO\\Desktop\\JPotify\\JPotify\\src\\songs\\SongNames.txt");
        if(a==null)  a = new ArrayList();
-       playList.addSong(a);
-       for (int i=0;i<a.size();i++)
-           System.out.println(a.get(i)+"hellloooo");
-       playList.writeToFile(a);
-
-
+       if(name == null) new ArrayList();
+       playList.addSong(a,name);
+       for (int i=0;i<a.size();i++) {
+           System.out.println(a.get(i) + "hellloooo");
+           System.out.println(name.get(i)+" namee");
+       }
+       playList.writeToFile(a,"C:\\Users\\LENOVO\\Desktop\\JPotify\\JPotify\\src\\songs\\song.txt");
+       playList.writeToFile(name,"C:\\Users\\LENOVO\\Desktop\\JPotify\\JPotify\\src\\songs\\SongNames.txt");
     }
 }
