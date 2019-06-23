@@ -69,8 +69,8 @@ public class SongbarGUI extends JPanel {
         songBar.setLayout(new BorderLayout());
 
         //Icons of playBottons
-         playIcon = new ImageIcon(new ImageIcon("src\\icons\\play.png").getImage().getScaledInstance(25, 25, Image.SCALE_DEFAULT));
-         pauseIcon = new ImageIcon(new ImageIcon("src\\icons\\pause-512.png").getImage().getScaledInstance(25, 25, Image.SCALE_DEFAULT));
+         playIcon = new ImageIcon(new ImageIcon("C:\\Users\\LENOVO\\Desktop\\JPotify\\JPotify\\src\\icons\\play.png").getImage().getScaledInstance(25, 25, Image.SCALE_DEFAULT));
+         pauseIcon = new ImageIcon(new ImageIcon("C:\\Users\\LENOVO\\Desktop\\JPotify\\JPotify\\src\\icons\\pause-512.png").getImage().getScaledInstance(25, 25, Image.SCALE_DEFAULT));
          nextIcon = new ImageIcon(new ImageIcon("src\\icons/next.png").getImage().getScaledInstance(20, 20, Image.SCALE_DEFAULT));
          previousIcon = new ImageIcon(new ImageIcon("src\\icons\\previous.png").getImage().getScaledInstance(20, 20, Image.SCALE_DEFAULT));
          shuffleIcon = new ImageIcon(new ImageIcon("src\\icons\\Shuffle-2-icon.png").getImage().getScaledInstance(20, 20, Image.SCALE_DEFAULT));
@@ -108,7 +108,6 @@ public class SongbarGUI extends JPanel {
         bar = new JSlider();
         volume = new JSlider();
         filePath = new ArrayList();
-        vol = new SetVolume();
         timer = new Timer(1000, new Slider() );
 
         pause.setIcon(playIcon);
@@ -147,6 +146,8 @@ public class SongbarGUI extends JPanel {
         volume.setPreferredSize(new Dimension(150,5));
         volume.setBackground(new Color(20,20,20));
         volume.setBorder(new EmptyBorder(50, 10, 10, 0));
+        volume.setMinimum(-40);
+        volume.setMaximum(20);
         metadata.setPreferredSize(new Dimension(500, 50));
         metadata.setBackground(new Color(20,20,20));
 
@@ -204,7 +205,7 @@ public class SongbarGUI extends JPanel {
         bar.addChangeListener(sliderHandler);
         bar.addMouseListener(skip);
 
-        //filePath = (ArrayList) songs.reafFromFile();
+        filePath = (ArrayList) songs.reafFromFile("C:\\Users\\LENOVO\\Desktop\\JPotify\\JPotify\\src\\songs\\song.txt");
         newSong();
     }
     public void newSong() throws InvalidDataException, IOException, UnsupportedTagException {
@@ -280,7 +281,6 @@ public class SongbarGUI extends JPanel {
                     timer.restart();
                     pause.setIcon(pauseIcon);
 
-
                 }
                 else if (counter % 2 != 0){
                     mp3.resume();
@@ -328,20 +328,7 @@ public class SongbarGUI extends JPanel {
        @Override
        public void stateChanged(ChangeEvent e) {
            if (e.getSource() == volume) {
-               System.out.println(volume.getValue());
-               try {
-                   vol.open(new AudioFormat(22000, 16, 1, true, false));
-               } catch (JavaLayerException ex) {
-                   ex.printStackTrace();
-               }
-               short[] data = new short[22000 / 10];
-               try {
-                   vol.writeImpl(data, 0, data.length);
-               } catch (JavaLayerException ex) {
-                   ex.printStackTrace();
-               }
-               vol.flushImpl();
-               vol.closeImpl();
+               mp3.player.setVol((float) volume.getValue());
 
            } else {
                if (bar.getValue() % 60 < 10)

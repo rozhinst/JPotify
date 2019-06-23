@@ -7,6 +7,7 @@ public class MP3 implements Runnable {
     private int value;
     private int totalFrame;
     private String path;
+    public AdvancedPlayer player;
     Thread t;
     public MP3(int cnt,String path,int totalFrame) {
         this.cnt = cnt;
@@ -29,7 +30,7 @@ public class MP3 implements Runnable {
         FileInputStream FIS ;
         try {
             FIS = new FileInputStream(path);
-            AdvancedPlayer player = new AdvancedPlayer(FIS);
+             player = new AdvancedPlayer(FIS);
             player.play(value,totalFrame);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
