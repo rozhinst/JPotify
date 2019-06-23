@@ -77,20 +77,20 @@ public class Songs implements Serializable {
 
 
 }
-class Main1{
-   public static void main(String[] args) throws IOException, InvalidDataException, UnsupportedTagException {
-        Songs playList = new Songs();
-       //playList.writeToFile();
-       ArrayList a = (ArrayList) playList.reafFromFile("C:\\Users\\LENOVO\\Desktop\\JPotify\\JPotify\\src\\songs\\song.txt");
-       ArrayList name = (ArrayList) playList.reafFromFile("C:\\Users\\LENOVO\\Desktop\\JPotify\\JPotify\\src\\songs\\SongNames.txt");
-       if(a==null)  a = new ArrayList();
-       if(name == null) name = new ArrayList();
-       playList.addSong(a,name);
-       for (int i=0;i<a.size();i++) {
-           System.out.println(a.get(i) + "hellloooo");
-           System.out.println(name.get(i)+" namee");
-       }
-       playList.writeToFile(a,"C:\\Users\\LENOVO\\Desktop\\JPotify\\JPotify\\src\\songs\\song.txt");
-       playList.writeToFile(name,"C:\\Users\\LENOVO\\Desktop\\JPotify\\JPotify\\src\\songs\\SongNames.txt");
-    }
-}
+//class Main1{
+//   public static void main(String[] args) throws IOException, InvalidDataException, UnsupportedTagException {
+//        Songs playList = new Songs();
+//       //playList.writeToFile();
+//       ArrayList a = (ArrayList) playList.reafFromFile("C:\\Users\\LENOVO\\Desktop\\JPotify\\JPotify\\src\\songs\\song.txt");
+//       ArrayList name = (ArrayList) playList.reafFromFile("C:\\Users\\LENOVO\\Desktop\\JPotify\\JPotify\\src\\songs\\SongNames.txt");
+//       if(a==null)  a = new ArrayList();
+//       if(name == null) name = new ArrayList();
+//       playList.addSong(a,name);
+//       for (int i=0;i<a.size();i++) {
+//           System.out.println(a.get(i) + "hellloooo");
+//           System.out.println(name.get(i)+" namee");
+//       }
+//       playList.writeToFile(a,"C:\\Users\\LENOVO\\Desktop\\JPotify\\JPotify\\src\\songs\\song.txt");
+//       playList.writeToFile(name,"C:\\Users\\LENOVO\\Desktop\\JPotify\\JPotify\\src\\songs\\SongNames.txt");
+//    }
+//}
