@@ -4,6 +4,7 @@ import com.mpatric.mp3agic.UnsupportedTagException;
 import javax.swing.*;
 import java.io.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class Songs implements Serializable {
     private static final String filepath = "C:\\Users\\LENOVO\\Desktop\\JPotify\\JPotify\\src\\songs\\song.txt";
@@ -24,9 +25,11 @@ public class Songs implements Serializable {
             songs = array;
             System.out.println("hjggkgkh "+chooser.getSelectedFile().getAbsolutePath());
             GetID3 id3 = new GetID3(chooser.getSelectedFile().getAbsolutePath());
-            name.add(id3.getDetails().get(0));
-            songNames = name;
             System.out.println("namesssssss "+ id3.getDetails().get(0));
+            String [] s =  id3.getDetails().get(0).split(":");
+            name.add(s[1]);
+            songNames = name;
+
         }
     }
     public void removeSongs(String s) throws InvalidDataException, IOException, UnsupportedTagException {
@@ -81,7 +84,7 @@ class Main1{
        ArrayList a = (ArrayList) playList.reafFromFile("C:\\Users\\LENOVO\\Desktop\\JPotify\\JPotify\\src\\songs\\song.txt");
        ArrayList name = (ArrayList) playList.reafFromFile("C:\\Users\\LENOVO\\Desktop\\JPotify\\JPotify\\src\\songs\\SongNames.txt");
        if(a==null)  a = new ArrayList();
-       if(name == null) new ArrayList();
+       if(name == null) name = new ArrayList();
        playList.addSong(a,name);
        for (int i=0;i<a.size();i++) {
            System.out.println(a.get(i) + "hellloooo");
