@@ -2,49 +2,83 @@ import com.mpatric.mp3agic.InvalidDataException;
 import com.mpatric.mp3agic.UnsupportedTagException;
 
 import javax.swing.*;
+import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.ArrayList;
 
 public class MiddlePage extends JPanel{
+    private Border emptyBorder;
     private  GetID3 id3;
     private  ArrayList filePath;
-    private ArrayList <JPanel> songs;
+    private ArrayList <JButton> songs;
+    //private
     private ArrayList <String> songPaths;
     private  Songs songsInLib;
-    private JFrame songsInLibrary;
-    private JFrame albumsInLibrary;
-    private JFrame songinPlaylist;
+    private JPanel songsInLibrary;
+    private JPanel albumsInLibrary;
+    private JPanel songinPlaylist;
+    private JTextArea details;
 
     public MiddlePage() throws InvalidDataException, IOException, UnsupportedTagException {
-        songinPlaylist = new JFrame();
-        songsInLibrary = new JFrame();
-        albumsInLibrary = new JFrame();
+        //this.setPreferredSize(new Dimension(200,200));
+        emptyBorder = BorderFactory.createEmptyBorder();
+        songinPlaylist = new JPanel();
+        songsInLibrary = new JPanel();
+        albumsInLibrary = new JPanel();
 
+        //panel.setBackground(new Color(0,0,0,0))
 
-        songsInLibrary.setVisible(true);
-
+        songsInLibrary.setBackground(new Color(0,0,0,0));
        // setLayout( new FlowLayout(FlowLayout.LEFT,15,20));
-        songsInLibrary.setLayout( new FlowLayout(FlowLayout.LEFT,15,20));
+        //songsInLibrary.setLayout( new FlowLayout(FlowLayout.CENTER,15,20));
+
+        songsInLibrary.setLayout(new GridLayout(0,4,10,10));
         songsInLib = new Songs();
         filePath = (ArrayList) songsInLib.reafFromFile("src\\songs\\song.txt");
-        songPaths =  songsInLib.getSongArrays();
-       songs = new ArrayList<>(songPaths.size());
-        for(int i=0;i<songPaths.size();i++){
 
+        //songPaths =  songsInLib.getSongArrays();
+      songs = new ArrayList<>(filePath.size());
+        for (int i = 0; i <filePath.size() ; i++) {
+            JButton button = new JButton();
+            button.setLayout(new GridLayout(2,1));
+            songs.add(button);
+
+        }
+
+
+
+        for(int i=0;i<filePath.size();i++){
+
+            details = new JTextArea();
+            details.setBackground(new Color(20,20,20));
+            details.setForeground(Color.WHITE);
             id3 = new GetID3((String) filePath.get(i));
-            Image newImage = id3.getImg().getScaledInstance(200, 200, Image.SCALE_SMOOTH);
+            Image newImage = id3.getImg().getScaledInstance(150, 150, Image.SCALE_SMOOTH);
+
+            for (int j = 0; j < id3.getDetails().size() - 1; j++) {
+                // temp += id3.getDetails().get(i);
+                details.append(id3.getDetails().get(j));
+                details.append("\n");
+
+            }
+
             JLabel artWork = new JLabel();
             artWork.setIcon(new ImageIcon(newImage));
-
-
             songs.get(i).add(artWork);
-          // songs.add(panel);
+            songs.get(i).add(details);
+
+           songs.get(i).setBackground(new Color(20,20,20));
+
             songsInLibrary.add(songs.get(i));
 
         }
 
+
+        //songsInLibrary.setVisible(false);
+        this.add(songsInLibrary);
+        songsInLibrary.setVisible(true);
 
 
     }

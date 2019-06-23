@@ -39,7 +39,7 @@ public class SongbarGUI extends JPanel {
     private JPanel songBar;
     private JPanel artPanel;
     private Handler handler;
-    private TextNote details;
+    private JTextArea details;
     private JPanel detailPanel;
     private JPanel metadata;
     private int counter = 0;
@@ -108,7 +108,6 @@ public class SongbarGUI extends JPanel {
         bar = new JSlider();
         volume = new JSlider();
         filePath = new ArrayList();
-        vol = new SetVolume();
         timer = new Timer(1000, new Slider() );
 
         pause.setIcon(playIcon);
@@ -147,6 +146,8 @@ public class SongbarGUI extends JPanel {
         volume.setPreferredSize(new Dimension(150,5));
         volume.setBackground(new Color(20,20,20));
         volume.setBorder(new EmptyBorder(50, 10, 10, 0));
+        volume.setMinimum(-40);
+        volume.setMaximum(20);
         metadata.setPreferredSize(new Dimension(500, 50));
         metadata.setBackground(new Color(20,20,20));
 
@@ -212,10 +213,6 @@ public class SongbarGUI extends JPanel {
         temp="";
         System.out.println((String) filePath.get(songNum));
         id3 = new GetID3((String) filePath.get(songNum));
-        for (int i = 0; i < id3.getDetails().size() - 1; i++) {
-            temp += id3.getDetails().get(i);
-            System.out.print(id3.getDetails().get(i));
-        }
         totalTime =id3.getMp3File().getLengthInSeconds();
         bar.setMaximum((int)id3.getMp3File().getLengthInSeconds());
         System.out.println("frames:"+id3.getTotalFrames());
@@ -224,13 +221,22 @@ public class SongbarGUI extends JPanel {
         duration.setText(s[1]);
         mp3 = new MP3(counter, (String) filePath.get(songNum), id3.getTotalFrames());
         t = new Thread(mp3);
-        details = new TextNote(temp);
+        details = new JTextArea();
+        for (int i = 0; i < id3.getDetails().size() - 1; i++) {
+            // temp += id3.getDetails().get(i);
+            details.append(id3.getDetails().get(i));
+            details.append("\n");
+            System.out.print(id3.getDetails().get(i));
+        }
+
         if(metadata.getComponentCount()!=0){
             metadata.remove(metadata.getComponent(0));
 
         }
         metadata.add(details);
         details.setPreferredSize(new Dimension(100, 50));
+        details.setBackground(new Color(20,20,20));
+        details.setForeground(Color.WHITE);
         Image newImage = id3.getImg().getScaledInstance(100, 100, Image.SCALE_SMOOTH);
         artwork.setIcon(new ImageIcon(newImage));
 
@@ -280,7 +286,6 @@ public class SongbarGUI extends JPanel {
                     timer.restart();
                     pause.setIcon(pauseIcon);
 
-
                 }
                 else if (counter % 2 != 0){
                     mp3.resume();
@@ -328,20 +333,7 @@ public class SongbarGUI extends JPanel {
        @Override
        public void stateChanged(ChangeEvent e) {
            if (e.getSource() == volume) {
-               System.out.println(volume.getValue());
-               try {
-                   vol.open(new AudioFormat(22000, 16, 1, true, false));
-               } catch (JavaLayerException ex) {
-                   ex.printStackTrace();
-               }
-               short[] data = new short[22000 / 10];
-               try {
-                   vol.writeImpl(data, 0, data.length);
-               } catch (JavaLayerException ex) {
-                   ex.printStackTrace();
-               }
-               vol.flushImpl();
-               vol.closeImpl();
+               mp3.player.setVol((float) volume.getValue());
 
            } else {
                if (bar.getValue() % 60 < 10)
