@@ -24,6 +24,14 @@ public class SongbarGUI extends JPanel {
     private JButton shuffle;
     private JPanel playButtons;
     private JButton favorite;
+    private ImageIcon pauseIcon;
+    private ImageIcon playIcon;
+    private ImageIcon favoriteIcon;
+    private ImageIcon shuffleIcon;
+    private ImageIcon nextIcon;
+    private ImageIcon previousIcon;
+    private ImageIcon refreshIcon;
+
 
     private JSlider bar;
     private JSlider volume;
@@ -59,14 +67,15 @@ public class SongbarGUI extends JPanel {
 
         songBar = new JPanel();
         songBar.setLayout(new BorderLayout());
+
         //Icons of playBottons
-        ImageIcon playIcon = new ImageIcon(new ImageIcon("src\\icons\\play.png").getImage().getScaledInstance(50, 50, Image.SCALE_DEFAULT));
-        ImageIcon pauseIcon = new ImageIcon(new ImageIcon("src\\icons\\pause-512.png").getImage().getScaledInstance(50, 50, Image.SCALE_DEFAULT));
-        ImageIcon nextIcon = new ImageIcon(new ImageIcon("src\\icons/next.png").getImage().getScaledInstance(20, 20, Image.SCALE_DEFAULT));
-        ImageIcon previousIcon = new ImageIcon(new ImageIcon("src\\icons\\previous.png").getImage().getScaledInstance(20, 20, Image.SCALE_DEFAULT));
-        ImageIcon shuffleIcon = new ImageIcon(new ImageIcon("src\\icons\\Shuffle-2-icon.png").getImage().getScaledInstance(20, 20, Image.SCALE_DEFAULT));
-        ImageIcon favoriteIcon = new ImageIcon(new ImageIcon("src\\icons\\favorite.png").getImage().getScaledInstance(20, 20, Image.SCALE_DEFAULT));
-        ImageIcon refreshIcon = new ImageIcon(new ImageIcon("src\\icons\\refresh.png").getImage().getScaledInstance(20, 20, Image.SCALE_DEFAULT));
+         playIcon = new ImageIcon(new ImageIcon("src\\icons\\play.png").getImage().getScaledInstance(25, 25, Image.SCALE_DEFAULT));
+         pauseIcon = new ImageIcon(new ImageIcon("src\\icons\\pause-512.png").getImage().getScaledInstance(25, 25, Image.SCALE_DEFAULT));
+         nextIcon = new ImageIcon(new ImageIcon("src\\icons/next.png").getImage().getScaledInstance(20, 20, Image.SCALE_DEFAULT));
+         previousIcon = new ImageIcon(new ImageIcon("src\\icons\\previous.png").getImage().getScaledInstance(20, 20, Image.SCALE_DEFAULT));
+         shuffleIcon = new ImageIcon(new ImageIcon("src\\icons\\Shuffle-2-icon.png").getImage().getScaledInstance(20, 20, Image.SCALE_DEFAULT));
+         favoriteIcon = new ImageIcon(new ImageIcon("src\\icons\\favorite.png").getImage().getScaledInstance(20, 20, Image.SCALE_DEFAULT));
+         refreshIcon = new ImageIcon(new ImageIcon("src\\icons\\refresh.png").getImage().getScaledInstance(20, 20, Image.SCALE_DEFAULT));
 
 
         setBackground(new Color(20,20,20));
@@ -143,8 +152,8 @@ public class SongbarGUI extends JPanel {
 
         playButtons.setBackground(new Color(20,20,20));
         playButtons.setPreferredSize(new Dimension(100,70));
-        playButtons.setBorder(new EmptyBorder(10, 10, 10, 40));
-        playButtons.setLayout( new FlowLayout(FlowLayout.CENTER,10,5));
+        playButtons.setBorder(new EmptyBorder(10, 10, 10, 50));
+        playButtons.setLayout( new FlowLayout(FlowLayout.CENTER,15,20));
         songBar.add(playButtons, BorderLayout.NORTH);
 
         artwork.setBorder(new EmptyBorder(10, 10, 10, 10));
@@ -158,24 +167,19 @@ public class SongbarGUI extends JPanel {
 
 
      barPanel = new JPanel();
-       // barPanel.add(bar);
         barPanel.setLayout( new FlowLayout(FlowLayout.CENTER,10,3));
         barPanel.setBorder(new EmptyBorder(0, 10, 20, 50));
         barPanel.setBackground(new Color(20,20,20));
 
-//
-//        barPanel.add(bar);
-//        barPanel.setBackground(new Color(20,20,20));
+
 
 
         detailPanel.add(artPanel);
         detailPanel.setBackground(new Color(20,20,20));
-        //detailPanel.setBackground(new Color(20,20,20));
+
         detailPanel.add(metadata);
-       // progressAndButtons.add(playButtons, NORTH);
-       // progressAndButtons.add(progressPanel, CENTER);
+
         add(detailPanel, WEST);
-        //add(progressAndButtons, CENTER);
         artPanel.add(artwork);
 
         playButtons.add(shuffle);
@@ -184,12 +188,6 @@ public class SongbarGUI extends JPanel {
         playButtons.add(next);
         playButtons.add(refresh);
         playButtons.add(favorite);
-        //playButtons.add(shuffle);
-//        progressPanel.add(songPlaying);
-//        progressPanel.add(barPanel);
-//        songBar.add(songPlaying, WEST);
-//        songBar.add(barPanel, BorderLayout.CENTER);
-//        songBar.add(duration, EAST);
         barPanel.add(songPlaying);
         barPanel.add(bar);
         barPanel.add(duration);
@@ -200,7 +198,6 @@ public class SongbarGUI extends JPanel {
         pause.addActionListener(handler);
         next.addActionListener(handler);
         prev.addActionListener(handler);
-       // progressPanel.add(duration);
         SkipMusic skip = new SkipMusic();
         sliderHandler = new SliderHandler();
         volume.addChangeListener(sliderHandler);
@@ -281,17 +278,20 @@ public class SongbarGUI extends JPanel {
                     sliderValue = 0;
                     mp3.playMusic(t);
                     timer.restart();
+                    pause.setIcon(pauseIcon);
+
                 }
                 else if (counter % 2 != 0){
                     mp3.resume();
                     timer.start();
+                    pause.setIcon(pauseIcon);
                 }
                 else {
                     timer.stop();
                     mp3.pauseMusic();
                     System.out.println("why");
                     System.out.println(timer.isRunning());
-
+                    pause.setIcon(playIcon);
                 }
             }
             if(e.getSource() == next) {
