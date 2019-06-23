@@ -20,7 +20,7 @@ public class Albums extends Songs{
         return id3.getImg();
     }
     public void manageAlbum(){
-        ArrayList<String> songs = (ArrayList<String>) this.reafFromFile();
+        ArrayList<String> songs = (ArrayList<String>) this.reafFromFile("C:\\Users\\LENOVO\\Desktop\\JPotify\\JPotify\\src\\songs\\song.txt");
 ///?????????????????????
 
     }
@@ -30,8 +30,9 @@ public class Albums extends Songs{
     public String getName(){
         return name;
     }
+    public ArrayList getAlbumSongs(){return albumSong;}
     public void removeAlbumSongs() throws InvalidDataException, IOException, UnsupportedTagException {
-        ArrayList<String> songs = (ArrayList<String>) this.reafFromFile();
+        ArrayList<String> songs = (ArrayList<String>) this.reafFromFile("C:\\Users\\LENOVO\\Desktop\\JPotify\\JPotify\\src\\songs\\song.txt");
         Iterator it = songs.iterator();
         String s;
         while (it.hasNext()) {
@@ -40,6 +41,7 @@ public class Albums extends Songs{
                 if(songs.get(i).equals(s))
                     this.removeSongs(s);
         }
-        this.writeToFile(this.getSongArrays());
+        this.writeToFile(this.getSongArrays(),"C:\\Users\\LENOVO\\Desktop\\JPotify\\JPotify\\src\\songs\\Albums.txt");
+        this.writeToFile(this.getSongname(),"C:\\Users\\LENOVO\\Desktop\\JPotify\\JPotify\\src\\songs\\SongNames.txt");
     }
 }

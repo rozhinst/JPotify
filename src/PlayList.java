@@ -16,12 +16,12 @@ public class PlayList implements Serializable {
     }
     public void addSongs(int index){
         Songs song = new Songs();
-        ArrayList<String> songs = (ArrayList<String>) song.reafFromFile();
+        ArrayList<String> songs = (ArrayList<String>) song.reafFromFile("C:\\Users\\LENOVO\\Desktop\\JPotify\\JPotify\\src\\songs\\song.txt");
         playListSongs.add(songs.get(index));
     }
     public void removeSongs(int index){
         Songs song = new Songs();
-        ArrayList<String> songs = (ArrayList<String>) song.reafFromFile();
+        ArrayList<String> songs = (ArrayList<String>) song.reafFromFile("C:\\Users\\LENOVO\\Desktop\\JPotify\\JPotify\\src\\songs\\song.txt");
         playListSongs.remove(songs.get(index));
     }
     public void reOrder(int index1,int index2){

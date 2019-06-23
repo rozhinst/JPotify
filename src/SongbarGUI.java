@@ -204,7 +204,7 @@ public class SongbarGUI extends JPanel {
         bar.addChangeListener(sliderHandler);
         bar.addMouseListener(skip);
 
-        filePath = (ArrayList) songs.reafFromFile();
+        filePath = (ArrayList) songs.reafFromFile("src\\songs\\song.txt");
         newSong();
     }
     public void newSong() throws InvalidDataException, IOException, UnsupportedTagException {
