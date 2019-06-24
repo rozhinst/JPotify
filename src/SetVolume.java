@@ -6,6 +6,7 @@ import javax.sound.sampled.Line;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.SourceDataLine;
 
+import com.mpatric.mp3agic.Mp3File;
 import javazoom.jl.decoder.Decoder;
 import javazoom.jl.decoder.JavaLayerException;
 import javazoom.jl.player.AudioDeviceBase;
@@ -143,4 +144,5 @@ class SetVolume extends AudioDeviceBase {
         }
         return pos;
     }
+
 }
