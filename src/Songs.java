@@ -4,52 +4,49 @@ import com.mpatric.mp3agic.UnsupportedTagException;
 import javax.swing.*;
 import java.io.*;
 import java.util.ArrayList;
-import java.util.HashMap;
 
-public class Songs implements Serializable {
-    private static final String filepath = "C:\\Users\\LENOVO\\Desktop\\JPotify\\JPotify\\src\\songs\\song.txt";
+public class Songs  implements Serializable {
+    //private static final String filepath = "C:\\Users\\LENOVO\\Desktop\\JPotify\\JPotify\\src\\songs\\song.txt";
     private JFileChooser chooser;
     private ArrayList songs;
     private String path;
-    private ArrayList<String> songNames;
+    //private ArrayList<String> songNames;
     public Songs() {
         songs = new ArrayList();
         chooser = new JFileChooser("src");
         chooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
-        songNames = new ArrayList<>();
+        //songNames = new ArrayList<>();
     }
-    public void addSong(ArrayList array,ArrayList name) throws InvalidDataException, IOException, UnsupportedTagException {
+    public void addSong(ArrayList array) throws InvalidDataException, IOException, UnsupportedTagException {
         int r = chooser.showSaveDialog(null);
         if (r == JFileChooser.APPROVE_OPTION) {
-            array.add(chooser.getSelectedFile().getAbsolutePath());
+            Song song = new Song();
+            song.setPath(chooser.getSelectedFile().getAbsolutePath());
+            GetID3 id3 = new GetID3(chooser.getSelectedFile().getAbsolutePath());
+            String[] s = id3.getDetails().get(0).split(":");
+            song.setName(s[1]);
+            array.add(song);
             songs = array;
             System.out.println("hjggkgkh "+chooser.getSelectedFile().getAbsolutePath());
-            GetID3 id3 = new GetID3(chooser.getSelectedFile().getAbsolutePath());
             System.out.println("namesssssss "+ id3.getDetails().get(0));
-            String [] s =  id3.getDetails().get(0).split(":");
-            name.add(s[1]);
-            songNames = name;
-
         }
     }
-    public void removeSongs(String s) throws InvalidDataException, IOException, UnsupportedTagException {
-        songs.remove(s);
-        GetID3 id3 = new GetID3(s);
-        songNames.remove(id3.getDetails().get(0));
+    public void removeSongs(Song song){
+        songs.remove(song);
     }
     public ArrayList getSongArrays(){
         return songs;
     }
-    public ArrayList getSongname(){
-        return songNames;
-    }
+//    //public ArrayList getSongname(){
+//        return songNames;
+//    }
    // public void setPath()
-    public void writeToFile(ArrayList arrayList,String path){
+    public static void writeToFile(Object object,String path){
         FileOutputStream fileOut;
         try {
             fileOut = new FileOutputStream(path);
             ObjectOutputStream objectOut = new ObjectOutputStream(fileOut);
-            objectOut.writeObject(arrayList);
+            objectOut.writeObject(object);
             objectOut.close();
             System.out.println("The Object  was succesfully written to a file");
         } catch (FileNotFoundException e) {
@@ -58,7 +55,7 @@ public class Songs implements Serializable {
             e.printStackTrace();
         }
     }
-    public Object reafFromFile(String path) {
+    public static Object reafFromFile(String path) {
         FileInputStream fileIn;
         try {
 

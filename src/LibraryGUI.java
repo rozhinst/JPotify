@@ -7,6 +7,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
 
 public class LibraryGUI extends JPanel{
@@ -62,13 +63,17 @@ public class LibraryGUI extends JPanel{
         @Override
         public void actionPerformed(ActionEvent e) {
             if(e.getSource() ==  addToLibrary ){
-                Songs playList = new Songs();
-                ArrayList a = (ArrayList) playList.reafFromFile("C:\\Users\\LENOVO\\Desktop\\JPotify\\JPotify\\src\\songs\\song.txt");
-                ArrayList name = (ArrayList) playList.reafFromFile("C:\\Users\\LENOVO\\Desktop\\JPotify\\JPotify\\src\\songs\\SongNames.txt");
-                if(a==null)  a = new ArrayList();
-                if(name == null) name = new ArrayList();
+                Songs song = new Songs();
+                boolean isNull = false;
+                ArrayList a = (ArrayList) song.reafFromFile("C:\\Users\\LENOVO\\Desktop\\JPotify\\JPotify\\src\\songs\\song.txt");
+               // ArrayList name = (ArrayList) song.reafFromFile("C:\\Users\\LENOVO\\Desktop\\JPotify\\JPotify\\src\\songs\\SongNames.txt");
+                if(a==null){
+                    a = new ArrayList();
+                    isNull = true;
+                }
+                //if(name == null) name = new ArrayList();
                 try {
-                    playList.addSong(a,name);
+                    song.addSong(a);
                 } catch (InvalidDataException ex) {
                     ex.printStackTrace();
                 } catch (IOException ex) {
@@ -76,9 +81,21 @@ public class LibraryGUI extends JPanel{
                 } catch (UnsupportedTagException ex) {
                     ex.printStackTrace();
                 }
-                playList.writeToFile(a,"C:\\Users\\LENOVO\\Desktop\\JPotify\\JPotify\\src\\songs\\song.txt");
-                playList.writeToFile(name,"C:\\Users\\LENOVO\\Desktop\\JPotify\\JPotify\\src\\songs\\SongNames.txt");
-                SongbarGUI.setFilePath((ArrayList) playList.reafFromFile("C:\\Users\\LENOVO\\Desktop\\JPotify\\JPotify\\src\\songs\\song.txt"));
+                song.writeToFile(song.getSongArrays(),"C:\\Users\\LENOVO\\Desktop\\JPotify\\JPotify\\src\\songs\\song.txt");
+                //playList.writeToFile(name,"C:\\Users\\LENOVO\\Desktop\\JPotify\\JPotify\\src\\songs\\SongNames.txt");
+                SongbarGUI.setFilePath((ArrayList) song.reafFromFile("C:\\Users\\LENOVO\\Desktop\\JPotify\\JPotify\\src\\songs\\song.txt"));
+                if(isNull) {
+                    try {
+                        SongbarGUI.newSong();
+                    } catch (InvalidDataException ex) {
+                        ex.printStackTrace();
+                    } catch (IOException ex) {
+                        ex.printStackTrace();
+                    } catch (UnsupportedTagException ex) {
+                        ex.printStackTrace();
+                    }
+                }
+
                 //playList.reafFromFile("C:\\Users\\LENOVO\\Desktop\\JPotify\\JPotify\\src\\songs\\SongNames.txt");
 
             }
