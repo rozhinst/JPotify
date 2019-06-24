@@ -45,11 +45,12 @@ public class SongbarGUI extends JPanel {
     private int counter = 0;
     private MP3 mp3;
     private GetID3 id3;
+    private int isShuffled;
 
     private String temp = "";
     private String path;
     private Songs songs;
-    private ArrayList filePath;
+    private static  ArrayList filePath;
     private SetVolume vol;
     private JLabel duration;
     private JLabel songPlaying;
@@ -71,9 +72,9 @@ public class SongbarGUI extends JPanel {
         //Icons of playBottons
          playIcon = new ImageIcon(new ImageIcon("src\\icons\\play.png").getImage().getScaledInstance(25, 25, Image.SCALE_DEFAULT));
          pauseIcon = new ImageIcon(new ImageIcon("src\\icons\\pause-512.png").getImage().getScaledInstance(25, 25, Image.SCALE_DEFAULT));
-         nextIcon = new ImageIcon(new ImageIcon("src\\icons/next.png").getImage().getScaledInstance(20, 20, Image.SCALE_DEFAULT));
+         nextIcon = new ImageIcon(new ImageIcon("src\\icons\\next.png").getImage().getScaledInstance(20, 20, Image.SCALE_DEFAULT));
          previousIcon = new ImageIcon(new ImageIcon("src\\icons\\previous.png").getImage().getScaledInstance(20, 20, Image.SCALE_DEFAULT));
-         shuffleIcon = new ImageIcon(new ImageIcon("src\\icons\\Shuffle-2-icon.png").getImage().getScaledInstance(20, 20, Image.SCALE_DEFAULT));
+         shuffleIcon = new ImageIcon(new ImageIcon("src\\icons\\refresh.png").getImage().getScaledInstance(20, 20, Image.SCALE_DEFAULT));
          favoriteIcon = new ImageIcon(new ImageIcon("src\\icons\\favorite.png").getImage().getScaledInstance(20, 20, Image.SCALE_DEFAULT));
          refreshIcon = new ImageIcon(new ImageIcon("src\\icons\\refresh.png").getImage().getScaledInstance(20, 20, Image.SCALE_DEFAULT));
 
@@ -109,6 +110,7 @@ public class SongbarGUI extends JPanel {
         volume = new JSlider();
         filePath = new ArrayList();
         timer = new Timer(1000, new Slider() );
+        isShuffled = 0;
 
         pause.setIcon(playIcon);
         pause.setBorder(emptyBorder);
@@ -208,6 +210,9 @@ public class SongbarGUI extends JPanel {
         filePath = (ArrayList) songs.reafFromFile("src\\songs\\song.txt");
         newSong();
     }
+    public static void setFilePath(ArrayList filePath1){
+        filePath = filePath1;
+    }
 
     public void newSong() throws InvalidDataException, IOException, UnsupportedTagException {
         sliderValue = 0;
@@ -223,8 +228,14 @@ public class SongbarGUI extends JPanel {
         System.out.println("frames:"+id3.getTotalFrames());
         bar.setValue(0);
         String[] s = id3.getDetails().get(id3.getDetails().size() - 1).split("\\s+");
+        mp3 = new MP3();
         duration.setText(s[1]);
-        mp3 = new MP3(counter, (String) filePath.get(songNum), id3.getTotalFrames());
+//        if(isShuffled%2!=0){
+//            songNum = mp3.shuffle(filePath.size());
+//            mp3 = mp3.creatMP3(counter, (String) filePath.get(songNum), id3);
+//        }
+         mp3 = mp3.creatMP3(counter, (String) filePath.get(songNum), id3);
+
         t = new Thread(mp3);
         details = new TextNote(temp);
         if(metadata.getComponentCount()!=0){
@@ -313,6 +324,12 @@ public class SongbarGUI extends JPanel {
                     System.out.println("prev done");
                 }
             }
+//            if(e.getSource() == shuffle){
+//                isShuffled++;
+//                if(isShuffled%2!=0){
+//                    songNum = mp3.shuffle(filePath.size());
+//                }
+//            }
 
 
         }

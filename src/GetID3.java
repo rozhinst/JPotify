@@ -41,11 +41,11 @@ public class GetID3 {
             if (tag.equals("TAG")) {
                // if(mp3File.hasId3v1Tag()) {
                 //System.out.println(new String(aByte, 3, 30));
-                details.add(title = "Title: " + id3.substring(3, 32)); //new String(aByte, 3, 30));
-                details.add(albume = "Album: " + id3.substring(63, 91));//new String(aByte, 30, 63));
-                details.add(artist = "Artist: " + id3.substring(33, 62));//new String(aByte, 33, 30));
-                details.add(year = "Year: " + id3.substring(93, 97) );//new String(aByte, 93, 4));
-                details.add(genre = "Genre: " + id3.substring(127, 128)); //new String(aByte, 127, 1));
+                details.add(title = "Title: " + id3.substring(3, 32)+ "\n"); //new String(aByte, 3, 30));
+                details.add(albume = "Album: " + id3.substring(63, 91)+ "\n");//new String(aByte, 30, 63));
+                details.add(artist = "Artist: " + id3.substring(33, 62)+ "\n");//new String(aByte, 33, 30));
+                details.add(year = "Year: " + id3.substring(93, 97)+ "\n" );//new String(aByte, 93, 4));
+                details.add(genre = "Genre: " + id3.substring(127, 128)+ "\n"); //new String(aByte, 127, 1));
                 String tmp = "Duration "+mp3File.getLengthInSeconds()/60 +":";
                 if(mp3File.getLengthInSeconds()%60<10) tmp+="0"+mp3File.getLengthInSeconds()%60;
                 else tmp+=mp3File.getLengthInSeconds()%60;
@@ -60,7 +60,6 @@ public class GetID3 {
                 img = ImageIO.read(new ByteArrayInputStream(imageData));
 
             }
-
 
         } catch (FileNotFoundException e) {
             e.printStackTrace();

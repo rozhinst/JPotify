@@ -4,24 +4,24 @@ import com.mpatric.mp3agic.UnsupportedTagException;
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
-import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.ArrayList;
 
 public class MiddlePage extends JPanel{
     private Border emptyBorder;
-    private  GetID3 id3;
-    private  ArrayList filePath;
-    private ArrayList <JButton> songs;
+    private static GetID3 id3;
+    private static  ArrayList filePath2;
+    private static ArrayList <JButton> songs;
     //private
     private ArrayList <String> songPaths;
-    private  Songs songsInLib;
-    private JPanel songsInLibrary;
+    private static Songs songsInLib;
+    private static JPanel songsInLibrary;
     private JPanel albumsInLibrary;
     private JPanel songinPlaylist;
-    private JTextArea details;
+    private static JTextArea details;
 
     public MiddlePage() throws InvalidDataException, IOException, UnsupportedTagException {
+
         //this.setPreferredSize(new Dimension(200,200));
         emptyBorder = BorderFactory.createEmptyBorder();
         songinPlaylist = new JPanel();
@@ -31,16 +31,28 @@ public class MiddlePage extends JPanel{
         //panel.setBackground(new Color(0,0,0,0))
 
         songsInLibrary.setBackground(new Color(0,0,0,0));
-       // setLayout( new FlowLayout(FlowLayout.LEFT,15,20));
+        // setLayout( new FlowLayout(FlowLayout.LEFT,15,20));
         //songsInLibrary.setLayout( new FlowLayout(FlowLayout.CENTER,15,20));
+               songsInLibrary.setVisible(true);
 
         songsInLibrary.setLayout(new GridLayout(0,4,10,10));
-        songsInLib = new Songs();
-        filePath = (ArrayList) songsInLib.reafFromFile("src\\songs\\song.txt");
+
+        addToLibraryPannel("src\\songs\\song.txt");
+        this.add(songsInLibrary);
+        revalidate();
+
+
+    }
+
+
+    public static void addToLibraryPannel(String path) throws InvalidDataException, IOException, UnsupportedTagException {
+        songsInLib=new Songs();
+        filePath2 = (ArrayList) songsInLib.reafFromFile(path);
+
 
         //songPaths =  songsInLib.getSongArrays();
-      songs = new ArrayList<>(filePath.size());
-        for (int i = 0; i <filePath.size() ; i++) {
+        songs = new ArrayList<>(filePath2.size());
+        for (int i = 0; i <filePath2.size() ; i++) {
             JButton button = new JButton();
             button.setLayout(new GridLayout(2,1));
             songs.add(button);
@@ -49,15 +61,15 @@ public class MiddlePage extends JPanel{
 
 
 
-        for(int i=0;i<filePath.size();i++){
+        for(int i=0;i<filePath2.size();i++){
 
             details = new JTextArea();
             details.setBackground(new Color(20,20,20));
             details.setForeground(Color.WHITE);
-            id3 = new GetID3((String) filePath.get(i));
+            id3 = new GetID3((String) filePath2.get(i));
             Image newImage = id3.getImg().getScaledInstance(150, 150, Image.SCALE_SMOOTH);
 
-            for (int j = 0; j < id3.getDetails().size() - 1; j++) {
+            for (int j = 0; j < id3.getDetails().size() -1; j++) {
                 // temp += id3.getDetails().get(i);
                 details.append(id3.getDetails().get(j));
                 details.append("\n");
@@ -69,18 +81,26 @@ public class MiddlePage extends JPanel{
             songs.get(i).add(artWork);
             songs.get(i).add(details);
 
-           songs.get(i).setBackground(new Color(20,20,20));
+            songs.get(i).setBackground(new Color(20,20,20));
 
             songsInLibrary.add(songs.get(i));
+
 
         }
 
 
+       //add(songsInLibrary);
         //songsInLibrary.setVisible(false);
-        this.add(songsInLibrary);
-        songsInLibrary.setVisible(true);
 
 
+    }
+
+    public  JPanel getSongsInLibrary(){
+        return songsInLibrary;
+    }
+
+    public  void setFilePath(ArrayList filePath1){
+        filePath2 = filePath1;
     }
 
 
@@ -96,6 +116,7 @@ public class MiddlePage extends JPanel{
         GradientPaint gp = new GradientPaint(0, 0, color1, 0, h, color2);
         g2d.setPaint(gp);
         g2d.fillRect(0, 0, w, h);
+        revalidate();
     }
 
 }

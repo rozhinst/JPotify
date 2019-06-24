@@ -1,6 +1,7 @@
 import com.mpatric.mp3agic.InvalidDataException;
 import com.mpatric.mp3agic.UnsupportedTagException;
 
+import javax.accessibility.AccessibleComponent;
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
@@ -14,6 +15,7 @@ public class LibraryGUI extends JPanel{
     private JButton album;
     private JButton addToLibrary;
     private JComboBox<Object> comboBox;
+    private MiddlePage middlePage;
     public LibraryGUI(){
         super();
         Border emptyBorder = BorderFactory.createEmptyBorder();
@@ -37,7 +39,9 @@ public class LibraryGUI extends JPanel{
         album.setBackground(new Color(20,20,20));
         album.setBorder(emptyBorder);
         album.setForeground(Color.WHITE);
-        addToLibrary = new JButton("AddToLibrary");
+        addToLibrary = new JButton();
+
+       // addToLibrary = new JButton("AddToLibrary");
         addToLibrary.setForeground(Color.WHITE);
         addToLibrary.setBorder(emptyBorder);
         addToLibrary.setBackground(new Color(20,20,20));
@@ -57,14 +61,19 @@ public class LibraryGUI extends JPanel{
         addToLibrary.addActionListener(handler);
 
     }
+
+    public void setMiddlePage(MiddlePage middlePage) {
+        this.middlePage = middlePage;
+    }
+
     public class Handler implements ActionListener{
 
         @Override
         public void actionPerformed(ActionEvent e) {
             if(e.getSource() ==  addToLibrary ){
                 Songs playList = new Songs();
-                ArrayList a = (ArrayList) playList.reafFromFile("C:\\Users\\LENOVO\\Desktop\\JPotify\\JPotify\\src\\songs\\song.txt");
-                ArrayList name = (ArrayList) playList.reafFromFile("C:\\Users\\LENOVO\\Desktop\\JPotify\\JPotify\\src\\songs\\SongNames.txt");
+                ArrayList a = (ArrayList) playList.reafFromFile("src\\songs\\song.txt");
+                ArrayList name = (ArrayList) playList.reafFromFile("src\\songs\\SongNames.txt");
                 if(a==null)  a = new ArrayList();
                 if(name == null) name = new ArrayList();
                 try {
@@ -79,8 +88,31 @@ public class LibraryGUI extends JPanel{
                 playList.writeToFile(a,"src\\songs\\song.txt");
                 playList.writeToFile(name,"src\\songs\\SongNames.txt");
                 SongbarGUI.setFilePath((ArrayList) playList.reafFromFile("src\\songs\\song.txt"));
+               // JPanel songsInLibrary = middlePage.getSongsInLibrary();
+                middlePage.getSongsInLibrary().removeAll();
+                try {
+                    middlePage.addToLibraryPannel("src\\songs\\song.txt");
+                } catch (InvalidDataException ex) {
+                    ex.printStackTrace();
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                } catch (UnsupportedTagException ex) {
+                    ex.printStackTrace();
+                }
+                //  middlePage.add(songsInLibrary);
+                middlePage.revalidate();
+
                 //playList.reafFromFile("C:\\Users\\LENOVO\\Desktop\\JPotify\\JPotify\\src\\songs\\SongNames.txt");
 
+            }
+            if((e.getSource() ==  song )){
+               middlePage.getSongsInLibrary().setVisible(true);
+               middlePage.revalidate();
+               // MiddlePage.re
+            }
+            else if(e.getSource()== album){
+               middlePage.getSongsInLibrary().setVisible(false);
+               middlePage.revalidate();
             }
         }
     }
