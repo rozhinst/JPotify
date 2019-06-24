@@ -1,13 +1,13 @@
 import com.mpatric.mp3agic.InvalidDataException;
 import com.mpatric.mp3agic.UnsupportedTagException;
 
-import javax.accessibility.AccessibleComponent;
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
 
 public class LibraryGUI extends JPanel{
@@ -39,9 +39,7 @@ public class LibraryGUI extends JPanel{
         album.setBackground(new Color(20,20,20));
         album.setBorder(emptyBorder);
         album.setForeground(Color.WHITE);
-        addToLibrary = new JButton();
-
-       // addToLibrary = new JButton("AddToLibrary");
+        addToLibrary = new JButton("AddToLibrary");
         addToLibrary.setForeground(Color.WHITE);
         addToLibrary.setBorder(emptyBorder);
         addToLibrary.setBackground(new Color(20,20,20));
@@ -71,13 +69,17 @@ public class LibraryGUI extends JPanel{
         @Override
         public void actionPerformed(ActionEvent e) {
             if(e.getSource() ==  addToLibrary ){
-                Songs playList = new Songs();
-                ArrayList a = (ArrayList) playList.reafFromFile("src\\songs\\song.txt");
-                ArrayList name = (ArrayList) playList.reafFromFile("src\\songs\\SongNames.txt");
-                if(a==null)  a = new ArrayList();
-                if(name == null) name = new ArrayList();
+                Songs song = new Songs();
+                boolean isNull = false;
+                ArrayList a = (ArrayList) song.reafFromFile("src\\songs\\song.txt");
+               // ArrayList name = (ArrayList) song.reafFromFile("C:\\Users\\LENOVO\\Desktop\\JPotify\\JPotify\\src\\songs\\SongNames.txt");
+                if(a==null){
+                    a = new ArrayList();
+                    isNull = true;
+                }
+                //if(name == null) name = new ArrayList();
                 try {
-                    playList.addSong(a,name);
+                    song.addSong(a);
                 } catch (InvalidDataException ex) {
                     ex.printStackTrace();
                 } catch (IOException ex) {
@@ -85,10 +87,21 @@ public class LibraryGUI extends JPanel{
                 } catch (UnsupportedTagException ex) {
                     ex.printStackTrace();
                 }
-                playList.writeToFile(a,"src\\songs\\song.txt");
-                playList.writeToFile(name,"src\\songs\\SongNames.txt");
-                SongbarGUI.setFilePath((ArrayList) playList.reafFromFile("src\\songs\\song.txt"));
-               // JPanel songsInLibrary = middlePage.getSongsInLibrary();
+                song.writeToFile(song.getSongArrays(),"src\\songs\\song.txt");
+                //playList.writeToFile(name,"C:\\Users\\LENOVO\\Desktop\\JPotify\\JPotify\\src\\songs\\SongNames.txt");
+                SongbarGUI.setFilePath((ArrayList) song.reafFromFile("src\\songs\\song.txt"));
+
+                if(isNull) {
+                    try {
+                        SongbarGUI.newSong();
+                    } catch (InvalidDataException ex) {
+                        ex.printStackTrace();
+                    } catch (IOException ex) {
+                        ex.printStackTrace();
+                    } catch (UnsupportedTagException ex) {
+                        ex.printStackTrace();
+                    }
+                }
                 middlePage.getSongsInLibrary().removeAll();
                 try {
                     middlePage.addToLibraryPannel("src\\songs\\song.txt");
@@ -99,20 +112,11 @@ public class LibraryGUI extends JPanel{
                 } catch (UnsupportedTagException ex) {
                     ex.printStackTrace();
                 }
-                //  middlePage.add(songsInLibrary);
                 middlePage.revalidate();
+
 
                 //playList.reafFromFile("C:\\Users\\LENOVO\\Desktop\\JPotify\\JPotify\\src\\songs\\SongNames.txt");
 
-            }
-            if((e.getSource() ==  song )){
-               middlePage.getSongsInLibrary().setVisible(true);
-               middlePage.revalidate();
-               // MiddlePage.re
-            }
-            else if(e.getSource()== album){
-               middlePage.getSongsInLibrary().setVisible(false);
-               middlePage.revalidate();
             }
         }
     }

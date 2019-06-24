@@ -4,14 +4,16 @@ import com.mpatric.mp3agic.UnsupportedTagException;
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class MiddlePage extends JPanel{
+public class MiddlePage extends JPanel {
     private Border emptyBorder;
     private static GetID3 id3;
-    private static  ArrayList filePath2;
-    private static ArrayList <JButton> songs;
+    private static  ArrayList fileOfSongs;
+   private static ArrayList <JButton> songs;
     //private
     private ArrayList <String> songPaths;
     private static Songs songsInLib;
@@ -19,6 +21,7 @@ public class MiddlePage extends JPanel{
     private JPanel albumsInLibrary;
     private JPanel songinPlaylist;
     private static JTextArea details;
+    private Handler handler;
 
     public MiddlePage() throws InvalidDataException, IOException, UnsupportedTagException {
 
@@ -33,7 +36,7 @@ public class MiddlePage extends JPanel{
         songsInLibrary.setBackground(new Color(0,0,0,0));
         // setLayout( new FlowLayout(FlowLayout.LEFT,15,20));
         //songsInLibrary.setLayout( new FlowLayout(FlowLayout.CENTER,15,20));
-               songsInLibrary.setVisible(true);
+        songsInLibrary.setVisible(true);
 
         songsInLibrary.setLayout(new GridLayout(0,4,10,10));
 
@@ -42,34 +45,30 @@ public class MiddlePage extends JPanel{
         revalidate();
 
 
+
     }
 
-
-    public static void addToLibraryPannel(String path) throws InvalidDataException, IOException, UnsupportedTagException {
-        songsInLib=new Songs();
-        filePath2 = (ArrayList) songsInLib.reafFromFile(path);
-
-
-        //songPaths =  songsInLib.getSongArrays();
-        songs = new ArrayList<>(filePath2.size());
-        for (int i = 0; i <filePath2.size() ; i++) {
+    public  void addToLibraryPannel(String path) throws InvalidDataException, IOException, UnsupportedTagException {
+        fileOfSongs = (ArrayList) songsInLib.reafFromFile(path);
+        if(fileOfSongs == null) fileOfSongs = new ArrayList();
+        songs = new ArrayList<>(fileOfSongs.size());
+        for (int i = 0; i <fileOfSongs.size() ; i++) {
             JButton button = new JButton();
             button.setLayout(new GridLayout(2,1));
             songs.add(button);
-
         }
-
-
-
-        for(int i=0;i<filePath2.size();i++){
-
+        Handler handler = new Handler();
+        for (int i = 0; i < songs.size() ; i++) {
+            songs.get(i).addActionListener(handler);
+        }
+        for (int i = 0; i <fileOfSongs.size() ; i++) {
             details = new JTextArea();
             details.setBackground(new Color(20,20,20));
             details.setForeground(Color.WHITE);
-            id3 = new GetID3((String) filePath2.get(i));
+            Song song = (Song) fileOfSongs.get(i);
+            id3 = new GetID3(song.getPath());
             Image newImage = id3.getImg().getScaledInstance(150, 150, Image.SCALE_SMOOTH);
-
-            for (int j = 0; j < id3.getDetails().size() -1; j++) {
+            for (int j = 0; j < id3.getDetails().size() -2; j++) {
                 // temp += id3.getDetails().get(i);
                 details.append(id3.getDetails().get(j));
                 details.append("\n");
@@ -86,11 +85,9 @@ public class MiddlePage extends JPanel{
             songsInLibrary.add(songs.get(i));
 
 
+
+
         }
-
-
-       //add(songsInLibrary);
-        //songsInLibrary.setVisible(false);
 
 
     }
@@ -99,9 +96,30 @@ public class MiddlePage extends JPanel{
         return songsInLibrary;
     }
 
-    public  void setFilePath(ArrayList filePath1){
-        filePath2 = filePath1;
+    public class Handler implements ActionListener{
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            for (int i = 0; i <fileOfSongs.size() ; i++) {
+                if(e.getSource() == songs.get(i)){
+                    System.out.println("e peresssed  "+i);
+                    SongbarGUI.setSongNum(i);
+                    try {
+                        SongbarGUI.newSong();
+                        SongbarGUI.renewThread();
+
+                    } catch (InvalidDataException ex) {
+                        ex.printStackTrace();
+                    } catch (IOException ex) {
+                        ex.printStackTrace();
+                    } catch (UnsupportedTagException ex) {
+                        ex.printStackTrace();
+                    }
+                }
+            }
+        }
     }
+
 
 
     @Override
@@ -116,7 +134,7 @@ public class MiddlePage extends JPanel{
         GradientPaint gp = new GradientPaint(0, 0, color1, 0, h, color2);
         g2d.setPaint(gp);
         g2d.fillRect(0, 0, w, h);
-        revalidate();
     }
 
 }
+

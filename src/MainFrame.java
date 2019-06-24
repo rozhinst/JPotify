@@ -34,8 +34,8 @@ public class MainFrame extends JFrame {
         songbar = new SongbarGUI();
         songbar.setBorder(emptyBorder);
         middlePage = new MiddlePage();
-        middlePage.setBorder(emptyBorder);
         library.setMiddlePage(middlePage);
+        middlePage.setBorder(emptyBorder);
         friendsActivity = new FriendsActivityGUI();
         friendsActivity.setBorder(emptyBorder);
         library.setPreferredSize(new Dimension(120,80));

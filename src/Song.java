@@ -1,9 +1,10 @@
+import java.io.Serializable;
 import java.time.LocalTime;
 
-public class Song {
+public class Song implements Serializable {
     private String name;
     private String path;
-    private LocalTime timePlayed;
+    private long timePlayed=0;
     public void setName(String s){
         name = s;
     }
@@ -11,10 +12,10 @@ public class Song {
         path = s;
     }
     public void setTimePlayed(){
-        timePlayed = LocalTime.now();
+        timePlayed = System.currentTimeMillis();
     }
 
-    public LocalTime getTimePlayed() {
+    public long getTimePlayed() {
         return timePlayed;
     }
 

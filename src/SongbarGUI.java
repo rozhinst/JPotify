@@ -13,53 +13,57 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
 import static java.awt.BorderLayout.*;
 
 public class SongbarGUI extends JPanel {
+    private static ImageIcon shuffleOff;
     private  JButton refresh;
     private JButton prev;
     private JButton pause;
     private JButton next;
-    private JButton shuffle;
+    private static JButton shuffle;
     private JPanel playButtons;
     private JButton favorite;
     private ImageIcon pauseIcon;
     private ImageIcon playIcon;
     private ImageIcon favoriteIcon;
-    private ImageIcon shuffleIcon;
+    private static ImageIcon shuffleIcon;
     private ImageIcon nextIcon;
     private ImageIcon previousIcon;
     private ImageIcon refreshIcon;
+    private ImageIcon favoriteOff;
 
 
-    private JSlider bar;
+    private static JSlider bar;
     private JSlider volume;
-    private JLabel artwork;
+    private static JLabel artwork;
     private JPanel songBar;
     private JPanel artPanel;
     private Handler handler;
-    private TextNote details;
+    private static TextNote details;
     private JPanel detailPanel;
-    private JPanel metadata;
-    private int counter = 0;
-    private MP3 mp3;
-    private GetID3 id3;
-    private int isShuffled;
+    private static JPanel metadata;
+    private static int counter = 0;
+    private static MP3 mp3;
+    private static GetID3 id3;
+    private static int isShuffled;
+    private int isFavorite;
 
-    private String temp = "";
+    private static String temp = "";
     private String path;
     private Songs songs;
     private static  ArrayList filePath;
     private SetVolume vol;
-    private JLabel duration;
+    private static JLabel duration;
     private JLabel songPlaying;
     private SliderHandler sliderHandler;
-    private int sliderValue;
-    private int songNum=0;
-    private long totalTime;
+    private static int sliderValue;
+    private static int songNum=0;
+    private static long totalTime;
     private JPanel barPanel;
-    private Thread t;
+    private static Thread t;
     Timer timer;
     public SongbarGUI() throws IOException, InvalidDataException, UnsupportedTagException {
         super();
@@ -74,9 +78,13 @@ public class SongbarGUI extends JPanel {
          pauseIcon = new ImageIcon(new ImageIcon("src\\icons\\pause-512.png").getImage().getScaledInstance(25, 25, Image.SCALE_DEFAULT));
          nextIcon = new ImageIcon(new ImageIcon("src\\icons\\next.png").getImage().getScaledInstance(20, 20, Image.SCALE_DEFAULT));
          previousIcon = new ImageIcon(new ImageIcon("src\\icons\\previous.png").getImage().getScaledInstance(20, 20, Image.SCALE_DEFAULT));
-         shuffleIcon = new ImageIcon(new ImageIcon("src\\icons\\refresh.png").getImage().getScaledInstance(20, 20, Image.SCALE_DEFAULT));
-         favoriteIcon = new ImageIcon(new ImageIcon("src\\icons\\favorite.png").getImage().getScaledInstance(20, 20, Image.SCALE_DEFAULT));
-         refreshIcon = new ImageIcon(new ImageIcon("src\\icons\\refresh.png").getImage().getScaledInstance(20, 20, Image.SCALE_DEFAULT));
+         shuffleIcon = new ImageIcon(new ImageIcon("src\\icons\\Shuffle-2-icon.png").getImage().getScaledInstance(20, 20, Image.SCALE_DEFAULT));
+         shuffleOff = new ImageIcon(new ImageIcon("src\\icons\\shuffleOff.png").getImage().getScaledInstance(20, 20, Image.SCALE_DEFAULT));
+
+        favoriteIcon = new ImageIcon(new ImageIcon("src\\icons\\filledFavorite.png").getImage().getScaledInstance(25, 25, Image.SCALE_DEFAULT));
+        favoriteOff =  new ImageIcon(new ImageIcon("src\\icons\\unfilledFavorite.png").getImage().getScaledInstance(25, 25, Image.SCALE_DEFAULT));
+
+        refreshIcon = new ImageIcon(new ImageIcon("src\\icons\\refresh.png").getImage().getScaledInstance(20, 20, Image.SCALE_DEFAULT));
 
 
         setBackground(new Color(20,20,20));
@@ -111,18 +119,21 @@ public class SongbarGUI extends JPanel {
         filePath = new ArrayList();
         timer = new Timer(1000, new Slider() );
         isShuffled = 0;
+        isFavorite = 0;
+
 
         pause.setIcon(playIcon);
         pause.setBorder(emptyBorder);
         pause.setBackground(new Color(20,20,20));
         pause.setToolTipText("Play/Pause");
 
-        favorite.setIcon(favoriteIcon);
+        favorite.setIcon(favoriteOff);
         favorite.setBorder(emptyBorder);
         favorite.setBackground(new Color(20,20,20));
         favorite.setToolTipText("Add to favorite");
 
-        shuffle.setIcon(shuffleIcon);
+
+        shuffle.setIcon(shuffleOff);
         shuffle.setBorder(emptyBorder);
         shuffle.setBackground(new Color(20,20,20));
         shuffle.setToolTipText("Shuffle");
@@ -198,9 +209,11 @@ public class SongbarGUI extends JPanel {
         add(volume, EAST);
         add(songBar,CENTER);
         handler = new Handler();
+        favorite.addActionListener(handler);
         pause.addActionListener(handler);
         next.addActionListener(handler);
         prev.addActionListener(handler);
+        shuffle.addActionListener(handler);
         SkipMusic skip = new SkipMusic();
         sliderHandler = new SliderHandler();
         volume.addChangeListener(sliderHandler);
@@ -208,45 +221,54 @@ public class SongbarGUI extends JPanel {
         bar.addMouseListener(skip);
 
         filePath = (ArrayList) songs.reafFromFile("src\\songs\\song.txt");
+        if(filePath == null) filePath = new ArrayList();
         newSong();
     }
     public static void setFilePath(ArrayList filePath1){
         filePath = filePath1;
     }
-
-    public void newSong() throws InvalidDataException, IOException, UnsupportedTagException {
+    public static void renewThread(){ t = new Thread(mp3);}
+    public static void setSongNum(int i){songNum = i;}
+    public static void newSong() throws InvalidDataException, IOException, UnsupportedTagException {
+        System.out.println("djfhjhf");
         sliderValue = 0;
+        bar.setValue(sliderValue);
+        System.out.println("hi");
         temp="";
-        System.out.println((String) filePath.get(songNum));
-        id3 = new GetID3((String) filePath.get(songNum));
-        for (int i = 0; i < id3.getDetails().size() - 1; i++) {
-            temp += id3.getDetails().get(i);
-            System.out.print(id3.getDetails().get(i));
-        }
-        totalTime =id3.getMp3File().getLengthInSeconds();
-        bar.setMaximum((int)id3.getMp3File().getLengthInSeconds());
-        System.out.println("frames:"+id3.getTotalFrames());
-        bar.setValue(0);
-        String[] s = id3.getDetails().get(id3.getDetails().size() - 1).split("\\s+");
         mp3 = new MP3();
-        duration.setText(s[1]);
-//        if(isShuffled%2!=0){
-//            songNum = mp3.shuffle(filePath.size());
-//            mp3 = mp3.creatMP3(counter, (String) filePath.get(songNum), id3);
-//        }
-         mp3 = mp3.creatMP3(counter, (String) filePath.get(songNum), id3);
+        if(filePath.size()!=0) {
+            System.out.println("biiiii");
+            if (isShuffled % 2 != 0) {
+                songNum = mp3.shuffle(filePath.size());
+               // shuffle.setIcon(shuffleIcon);
+            }
 
-        t = new Thread(mp3);
-        details = new TextNote(temp);
-        if(metadata.getComponentCount()!=0){
-            metadata.remove(metadata.getComponent(0));
+            Song song = (Song) filePath.get(songNum);
+            id3 = new GetID3(song.getPath());
+            mp3 = mp3.creatMP3(counter, song.getPath(), id3);
+            System.out.println(song.getPath());
 
+            for (int i = 0; i < id3.getDetails().size() - 1; i++) {
+                temp += id3.getDetails().get(i);
+                System.out.print(id3.getDetails().get(i));
+            }
+            totalTime = id3.getMp3File().getLengthInSeconds();
+            bar.setMaximum((int) id3.getMp3File().getLengthInSeconds());
+            System.out.println("frames:" + id3.getTotalFrames());
+            bar.setValue(0);
+            String[] s = id3.getDetails().get(id3.getDetails().size() - 1).split("\\s+");
+            duration.setText(s[1]);
+            t = new Thread(mp3);
+            details = new TextNote(temp);
+            if (metadata.getComponentCount() != 0) {
+                metadata.remove(metadata.getComponent(0));
+
+            }
+            metadata.add(details);
+            details.setPreferredSize(new Dimension(100, 50));
+            Image newImage = id3.getImg().getScaledInstance(100, 100, Image.SCALE_SMOOTH);
+            artwork.setIcon(new ImageIcon(newImage));
         }
-        metadata.add(details);
-        details.setPreferredSize(new Dimension(100, 50));
-        Image newImage = id3.getImg().getScaledInstance(100, 100, Image.SCALE_SMOOTH);
-        artwork.setIcon(new ImageIcon(newImage));
-
 
     }
     public void nextOrPrev(){
@@ -324,12 +346,26 @@ public class SongbarGUI extends JPanel {
                     System.out.println("prev done");
                 }
             }
-//            if(e.getSource() == shuffle){
-//                isShuffled++;
-//                if(isShuffled%2!=0){
-//                    songNum = mp3.shuffle(filePath.size());
-//                }
-//            }
+            if(e.getSource()==favorite){
+                isFavorite++;
+                if(isFavorite %2 ==1) {
+                    favorite.setIcon(favoriteIcon);
+                    System.out.println("favorite pressed");
+                }
+                    else {
+                    favorite.setIcon(favoriteOff);
+                }
+            }
+            if(e.getSource() == shuffle){
+
+                isShuffled++;
+                if(isShuffled %2 ==1){
+                    shuffle.setIcon(shuffleIcon);
+                }
+                else{
+                    shuffle.setIcon(shuffleOff);
+                }
+            }
 
 
         }
@@ -339,6 +375,10 @@ public class SongbarGUI extends JPanel {
         public void actionPerformed(ActionEvent e) {
             bar.setValue(sliderValue);
             sliderValue++;
+            if(sliderValue == bar.getMaximum()) {
+                songNum++;
+                nextOrPrev();
+            }
 
         }
     }
@@ -372,11 +412,15 @@ public class SongbarGUI extends JPanel {
            }
        }
        public void mousePressed(MouseEvent e) { }
-       public void mouseReleased(MouseEvent e) { }
+       public void mouseReleased(MouseEvent e) {
+           if(e.getSource() == bar){
+               mouseClicked(e);
+           }
+       }
        public void mouseEntered(MouseEvent e) { }
        public void mouseExited(MouseEvent e) { }
    }
-       public class TextNote extends JTextArea {
+       public static class TextNote extends JTextArea {
            public TextNote(String text) {
                super(text);
                setBackground(null);

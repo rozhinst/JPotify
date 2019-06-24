@@ -4,30 +4,30 @@ import java.util.Collections;
 
 public class PlayList implements Serializable {
     private String name;
-    private ArrayList<String> playListSongs;
-    private ArrayList<Songs> song;
+    private ArrayList<Song> playListSongs;
+    //private ArrayList<Songs> song;
     public PlayList(String name){
         this.name = name;
         playListSongs = new ArrayList<>();
-        song = new ArrayList<>();
+        //song = new ArrayList<>();
     }
     public void rename(String name){
         this.name = name;
     }
     public void addSongs(int index){
         Songs song = new Songs();
-        ArrayList<String> songs = (ArrayList<String>) song.reafFromFile("C:\\Users\\LENOVO\\Desktop\\JPotify\\JPotify\\src\\songs\\song.txt");
-        playListSongs.add(songs.get(index));
+        ArrayList<Song> songs = (ArrayList<Song>) song.reafFromFile("C:\\Users\\LENOVO\\Desktop\\JPotify\\JPotify\\src\\songs\\song.txt");
+        playListSongs.add(songs.get(index));//iteration?
     }
     public void removeSongs(int index){
         Songs song = new Songs();
-        ArrayList<String> songs = (ArrayList<String>) song.reafFromFile("C:\\Users\\LENOVO\\Desktop\\JPotify\\JPotify\\src\\songs\\song.txt");
-        playListSongs.remove(songs.get(index));
+        ArrayList<Song> songs = (ArrayList<Song>) song.reafFromFile("C:\\Users\\LENOVO\\Desktop\\JPotify\\JPotify\\src\\songs\\song.txt");
+        playListSongs.remove(songs.get(index));//iteration????
     }
     public void reOrder(int index1,int index2){
         Collections.swap(playListSongs,index1,index2);
     }//creatplaylist tuuye action listenere add new playliste va ye array az playlist ha va save o write hamunja bashe;
-    public ArrayList<String> getPlayListSongs(){
+    public ArrayList<Song> getPlayListSongs(){
         return playListSongs;
     }
     public String getName(){
