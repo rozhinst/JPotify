@@ -13,7 +13,9 @@ public class MiddlePage extends JPanel {
     private Border emptyBorder;
     private static GetID3 id3;
     private static  ArrayList fileOfSongs;
-   private static ArrayList <JButton> songs;
+    private static  ArrayList fileOfAlbums;
+    private static ArrayList <JButton> songs;
+    private  static ArrayList <JButton> albums;
     //private
     private ArrayList <String> songPaths;
     private static Songs songsInLib;
@@ -22,6 +24,7 @@ public class MiddlePage extends JPanel {
     private JPanel songinPlaylist;
     private static JTextArea details;
     private Handler handler;
+
 
     public MiddlePage() throws InvalidDataException, IOException, UnsupportedTagException {
 
@@ -40,16 +43,52 @@ public class MiddlePage extends JPanel {
 
         songsInLibrary.setLayout(new GridLayout(0,4,10,10));
 
-        addToLibraryPannel("src\\songs\\song.txt");
+        addSongsToLibraryPannel("src\\songs\\song.txt");
         this.add(songsInLibrary);
         revalidate();
 
 
+        albumsInLibrary.setBackground(new Color(0,0,0,0));
+        albumsInLibrary.setLayout(new GridLayout(0,4,10,10));
+        addAlbumsToLibraryPanel("src\\songs\\Albums.txt");
+
 
     }
 
-    public  void addToLibraryPannel(String path) throws InvalidDataException, IOException, UnsupportedTagException {
-        fileOfSongs = (ArrayList) songsInLib.reafFromFile(path);
+    private void addAlbumsToLibraryPanel(String path) throws InvalidDataException, IOException, UnsupportedTagException {
+        fileOfAlbums= (ArrayList) Songs.reafFromFile(path);
+        if(fileOfAlbums == null){
+            fileOfAlbums = new ArrayList();
+        }
+        albums = new ArrayList<>(fileOfAlbums.size());
+        for (int i = 0; i <fileOfAlbums.size() ; i++) {
+            JButton button = new JButton();
+            button.setLayout(new GridLayout(2,1));
+            albums.add(button);
+        }
+        Handler handler = new Handler();
+        for (int i = 0; i < songs.size() ; i++) {
+            songs.get(i).addActionListener(handler);
+        }
+
+        for (int i = 0; i <fileOfAlbums.size() ; i++) {
+            Albums album = (Albums) fileOfAlbums.get(i);
+            System.out.println(album.getName());
+            Image newImage = album.showPicture().getScaledInstance(150, 150, Image.SCALE_SMOOTH);
+            JLabel artWork = new JLabel();
+            artWork.setIcon(new ImageIcon(newImage));
+            albums.get(i).add(artWork);
+            details = new JTextArea();
+            details.setBackground(new Color(20,20,20));
+            details.setForeground(Color.WHITE);
+            details.append(album.getName());
+            albums.get(i).add(details);
+            albumsInLibrary.add(albums.get(i));
+        }
+    }
+
+    public  void addSongsToLibraryPannel(String path) throws InvalidDataException, IOException, UnsupportedTagException {
+        fileOfSongs = (ArrayList) Songs.reafFromFile(path);
         if(fileOfSongs == null) fileOfSongs = new ArrayList();
         songs = new ArrayList<>(fileOfSongs.size());
         for (int i = 0; i <fileOfSongs.size() ; i++) {
@@ -83,7 +122,6 @@ public class MiddlePage extends JPanel {
             songs.get(i).setBackground(new Color(20,20,20));
 
             songsInLibrary.add(songs.get(i));
-
         }
 
 
@@ -91,6 +129,9 @@ public class MiddlePage extends JPanel {
 
     public  JPanel getSongsInLibrary(){
         return songsInLibrary;
+    }
+    public JPanel getAlbumsInLibrary(){
+        return albumsInLibrary;
     }
 
     public class Handler implements ActionListener{
@@ -101,17 +142,9 @@ public class MiddlePage extends JPanel {
                 if(e.getSource() == songs.get(i)){
                     System.out.println("e peresssed  "+i);
                     SongbarGUI.setSongNum(i);
-                    try {
-                        SongbarGUI.newSong();
-                        SongbarGUI.renewThread();
 
-                    } catch (InvalidDataException ex) {
-                        ex.printStackTrace();
-                    } catch (IOException ex) {
-                        ex.printStackTrace();
-                    } catch (UnsupportedTagException ex) {
-                        ex.printStackTrace();
-                    }
+                        SongbarGUI.nextOrPrev();
+
                 }
             }
         }
