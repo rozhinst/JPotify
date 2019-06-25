@@ -167,7 +167,7 @@ public class MiddlePage extends JPanel {
         int w = getWidth();
         int h = getHeight();
         Color color2 = Color.BLACK;
-        Color color1 = Color.gray;
+        Color color1 = new Color(150,150,150);
         GradientPaint gp = new GradientPaint(0, 0, color1, 0, h, color2);
         g2d.setPaint(gp);
         g2d.fillRect(0, 0, w, h);
