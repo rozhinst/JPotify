@@ -71,6 +71,7 @@ public class MiddlePage extends JPanel {
             songs.get(i).addActionListener(handler);
         }
 
+
         for (int i = 0; i <fileOfAlbums.size() ; i++) {
             Albums album = (Albums) fileOfAlbums.get(i);
             System.out.println(album.getName());
