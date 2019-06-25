@@ -84,8 +84,6 @@ public class MiddlePage extends JPanel {
 
             songsInLibrary.add(songs.get(i));
 
-
-
         }
 
 
