@@ -13,7 +13,7 @@ public class MiddlePage extends JPanel {
     private Border emptyBorder;
     private static GetID3 id3;
     private static  ArrayList fileOfSongs;
-   private static ArrayList <JButton> songs;
+    private static ArrayList <JButton> songs;
     //private
     private ArrayList <String> songPaths;
     private static Songs songsInLib;
@@ -40,7 +40,7 @@ public class MiddlePage extends JPanel {
 
         songsInLibrary.setLayout(new GridLayout(0,4,10,10));
 
-        addToLibraryPannel("src\\songs\\song.txt");
+        addToLibraryPannel("C:\\Users\\LENOVO\\Desktop\\JPotify\\JPotify\\src\\songs\\song.txt");
         this.add(songsInLibrary);
         revalidate();
 
@@ -83,11 +83,6 @@ public class MiddlePage extends JPanel {
             songs.get(i).setBackground(new Color(20,20,20));
 
             songsInLibrary.add(songs.get(i));
-
-
-
-
-
         }
 
 
@@ -105,17 +100,9 @@ public class MiddlePage extends JPanel {
                 if(e.getSource() == songs.get(i)){
                     System.out.println("e peresssed  "+i);
                     SongbarGUI.setSongNum(i);
-                    try {
-                        SongbarGUI.newSong();
-                        SongbarGUI.renewThread();
 
-                    } catch (InvalidDataException ex) {
-                        ex.printStackTrace();
-                    } catch (IOException ex) {
-                        ex.printStackTrace();
-                    } catch (UnsupportedTagException ex) {
-                        ex.printStackTrace();
-                    }
+                        SongbarGUI.nextOrPrev();
+
                 }
             }
         }

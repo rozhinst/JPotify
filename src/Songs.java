@@ -4,6 +4,7 @@ import com.mpatric.mp3agic.UnsupportedTagException;
 import javax.swing.*;
 import java.io.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class Songs  implements Serializable {
     //private static final String filepath = "C:\\Users\\LENOVO\\Desktop\\JPotify\\JPotify\\src\\songs\\song.txt";
@@ -17,10 +18,10 @@ public class Songs  implements Serializable {
         chooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
         //songNames = new ArrayList<>();
     }
-    public void addSong(ArrayList array) throws InvalidDataException, IOException, UnsupportedTagException {
+    public Song addSong(ArrayList array) throws InvalidDataException, IOException, UnsupportedTagException {
         int r = chooser.showSaveDialog(null);
+        Song song = new Song();
         if (r == JFileChooser.APPROVE_OPTION) {
-            Song song = new Song();
             song.setPath(chooser.getSelectedFile().getAbsolutePath());
             GetID3 id3 = new GetID3(chooser.getSelectedFile().getAbsolutePath());
             String[] s = id3.getDetails().get(0).split(":");
@@ -30,9 +31,11 @@ public class Songs  implements Serializable {
             System.out.println("hjggkgkh "+chooser.getSelectedFile().getAbsolutePath());
             System.out.println("namesssssss "+ id3.getDetails().get(0));
         }
+        return song;
     }
     public void removeSongs(Song song){
         songs.remove(song);
+        System.out.println("song removed");
     }
     public ArrayList getSongArrays(){
         return songs;
@@ -71,23 +74,30 @@ public class Songs  implements Serializable {
             return null;
         }
     }
+    public static void orderingSongs(ArrayList<Song> songs){
+        ArrayList<Albums> albums = new ArrayList<>();
+        for(int i=0;i<songs.size()-1;i++){
+            for(int j=0;j<songs.size()-i-1;j++)
+                if(songs.get(j).getTimePlayed() < songs.get(j+1).getTimePlayed()){
+                    Song song = songs.get(j);
+                    songs.set(j,songs.get(j+1));
+                    songs.set(j+1,song);
+                }
+        }
+        for(int i =0;i<songs.size();i++)
+            albums.add(songs.get(i).getAlbum());
+        Songs.writeToFile(songs,"C:\\Users\\LENOVO\\Desktop\\JPotify\\JPotify\\src\\songs\\song.txt");
+        Songs.writeToFile(albums,"C:\\Users\\LENOVO\\Desktop\\JPotify\\JPotify\\src\\songs\\Albums.txt");
+    }
 
 
 }
-//class Main1{
-//   public static void main(String[] args) throws IOException, InvalidDataException, UnsupportedTagException {
-//        Songs playList = new Songs();
-//       //playList.writeToFile();
-//       ArrayList a = (ArrayList) playList.reafFromFile("C:\\Users\\LENOVO\\Desktop\\JPotify\\JPotify\\src\\songs\\song.txt");
-//       ArrayList name = (ArrayList) playList.reafFromFile("C:\\Users\\LENOVO\\Desktop\\JPotify\\JPotify\\src\\songs\\SongNames.txt");
-//       if(a==null)  a = new ArrayList();
-//       if(name == null) name = new ArrayList();
-//       playList.addSong(a,name);
-//       for (int i=0;i<a.size();i++) {
-//           System.out.println(a.get(i) + "hellloooo");
-//           System.out.println(name.get(i)+" namee");
-//       }
-//       playList.writeToFile(a,"C:\\Users\\LENOVO\\Desktop\\JPotify\\JPotify\\src\\songs\\song.txt");
-//       playList.writeToFile(name,"C:\\Users\\LENOVO\\Desktop\\JPotify\\JPotify\\src\\songs\\SongNames.txt");
-//    }
-//}
+class Main1{
+   public static void main(String[] args) throws IOException, InvalidDataException, UnsupportedTagException {
+//        ArrayList<Song> songs = (ArrayList<Song>) Songs.reafFromFile("C:\\Users\\LENOVO\\Desktop\\JPotify\\JPotify\\src\\songs\\song.txt");
+//       // songs.remove(4);
+//
+//        Songs.writeToFile(songs,"C:\\Users\\LENOVO\\Desktop\\JPotify\\JPotify\\src\\songs\\song.txt");
+
+}
+}

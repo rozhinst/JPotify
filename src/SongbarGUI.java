@@ -1,7 +1,6 @@
 import com.mpatric.mp3agic.InvalidDataException;
 import com.mpatric.mp3agic.UnsupportedTagException;
-import javazoom.jl.decoder.JavaLayerException;
-import javax.sound.sampled.AudioFormat;
+
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
@@ -13,7 +12,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.IOException;
-import java.io.Serializable;
 import java.util.ArrayList;
 import static java.awt.BorderLayout.*;
 
@@ -64,7 +62,7 @@ public class SongbarGUI extends JPanel {
     private static long totalTime;
     private JPanel barPanel;
     private static Thread t;
-    Timer timer;
+    static Timer timer;
     public SongbarGUI() throws IOException, InvalidDataException, UnsupportedTagException {
         super();
         //creating an empty border
@@ -74,17 +72,18 @@ public class SongbarGUI extends JPanel {
         songBar.setLayout(new BorderLayout());
 
         //Icons of playBottons
-         playIcon = new ImageIcon(new ImageIcon("src\\icons\\play.png").getImage().getScaledInstance(25, 25, Image.SCALE_DEFAULT));
-         pauseIcon = new ImageIcon(new ImageIcon("src\\icons\\pause-512.png").getImage().getScaledInstance(25, 25, Image.SCALE_DEFAULT));
-         nextIcon = new ImageIcon(new ImageIcon("src\\icons\\next.png").getImage().getScaledInstance(20, 20, Image.SCALE_DEFAULT));
-         previousIcon = new ImageIcon(new ImageIcon("src\\icons\\previous.png").getImage().getScaledInstance(20, 20, Image.SCALE_DEFAULT));
-         shuffleIcon = new ImageIcon(new ImageIcon("src\\icons\\Shuffle-2-icon.png").getImage().getScaledInstance(20, 20, Image.SCALE_DEFAULT));
-         shuffleOff = new ImageIcon(new ImageIcon("src\\icons\\shuffleOff.png").getImage().getScaledInstance(20, 20, Image.SCALE_DEFAULT));
+        playIcon = new ImageIcon(new ImageIcon("C:\\Users\\LENOVO\\Desktop\\JPotify\\JPotify\\src\\icons\\play.png").getImage().getScaledInstance(25, 25, Image.SCALE_DEFAULT));
+        pauseIcon = new ImageIcon(new ImageIcon("C:\\Users\\LENOVO\\Desktop\\JPotify\\JPotify\\src\\icons\\pause-512.png").getImage().getScaledInstance(25, 25, Image.SCALE_DEFAULT));
+        nextIcon = new ImageIcon(new ImageIcon("C:\\Users\\LENOVO\\Desktop\\JPotify\\JPotify\\src\\icons\\next.png").getImage().getScaledInstance(20, 20, Image.SCALE_DEFAULT));
+        previousIcon = new ImageIcon(new ImageIcon("C:\\Users\\LENOVO\\Desktop\\JPotify\\JPotify\\src\\icons\\previous.png").getImage().getScaledInstance(20, 20, Image.SCALE_DEFAULT));
+        shuffleIcon = new ImageIcon(new ImageIcon("C:\\Users\\LENOVO\\Desktop\\JPotify\\JPotify\\src\\icons\\Shuffle-2-icon.png").getImage().getScaledInstance(20, 20, Image.SCALE_DEFAULT));
+        shuffleOff = new ImageIcon(new ImageIcon("C:\\Users\\LENOVO\\Desktop\\JPotify\\JPotify\\src\\icons\\shuffleOff.png").getImage().getScaledInstance(20, 20, Image.SCALE_DEFAULT));
 
-        favoriteIcon = new ImageIcon(new ImageIcon("src\\icons\\filledFavorite.png").getImage().getScaledInstance(25, 25, Image.SCALE_DEFAULT));
-        favoriteOff =  new ImageIcon(new ImageIcon("src\\icons\\unfilledFavorite.png").getImage().getScaledInstance(25, 25, Image.SCALE_DEFAULT));
+        favoriteIcon = new ImageIcon(new ImageIcon("C:\\Users\\LENOVO\\Desktop\\JPotify\\JPotify\\src\\icons\\filledFavorite.png").getImage().getScaledInstance(25, 25, Image.SCALE_DEFAULT));
+        favoriteOff =  new ImageIcon(new ImageIcon("C:\\Users\\LENOVO\\Desktop\\JPotify\\JPotify\\src\\icons\\unfilledFavorite.png").getImage().getScaledInstance(25, 25, Image.SCALE_DEFAULT));
 
-        refreshIcon = new ImageIcon(new ImageIcon("src\\icons\\refresh.png").getImage().getScaledInstance(20, 20, Image.SCALE_DEFAULT));
+        refreshIcon = new ImageIcon(new ImageIcon("C:\\Users\\LENOVO\\Desktop\\JPotify\\JPotify\\src\\icons\\refresh.png").getImage().getScaledInstance(20, 20, Image.SCALE_DEFAULT));
+
 
 
         setBackground(new Color(20,20,20));
@@ -94,7 +93,7 @@ public class SongbarGUI extends JPanel {
         songs = new Songs();
         metadata = new JPanel();
         playButtons = new JPanel();
-      //  progressPanel = new JPanel();
+        //  progressPanel = new JPanel();
         artPanel = new JPanel();
         artwork = new JLabel();
         detailPanel = new JPanel();
@@ -126,32 +125,38 @@ public class SongbarGUI extends JPanel {
         pause.setBorder(emptyBorder);
         pause.setBackground(new Color(20,20,20));
         pause.setToolTipText("Play/Pause");
+        pause.setFocusable(false);
 
         favorite.setIcon(favoriteOff);
         favorite.setBorder(emptyBorder);
         favorite.setBackground(new Color(20,20,20));
         favorite.setToolTipText("Add to favorite");
+        favorite.setFocusable(false);
 
 
         shuffle.setIcon(shuffleOff);
         shuffle.setBorder(emptyBorder);
         shuffle.setBackground(new Color(20,20,20));
         shuffle.setToolTipText("Shuffle");
+        shuffle.setFocusable(false);
 
         next.setIcon(nextIcon);
         next.setBorder(emptyBorder);
         next.setBackground(new Color(20,20,20));
         next.setToolTipText("Next Song");
+        next.setFocusable(false);
 
         prev.setIcon(previousIcon);
         prev.setBorder(emptyBorder);
         prev.setBackground(new Color(20,20,20));
         prev.setToolTipText("Previous Song");
+        prev.setFocusable(false);
 
         refresh.setIcon(refreshIcon);
         refresh.setBorder(emptyBorder);
         refresh.setBackground(new Color(20,20,20));
         refresh.setToolTipText("Replay the Song");
+        refresh.setFocusable(false);
 
 
 
@@ -172,7 +177,7 @@ public class SongbarGUI extends JPanel {
 
         artwork.setBorder(new EmptyBorder(10, 10, 10, 10));
         artwork.setBackground(new Color(20,20,20));
-       // artwork.setPreferredSize(new Dimension(125,120));
+        // artwork.setPreferredSize(new Dimension(125,120));
 
         bar.setBackground(new Color(20,20,20));
         bar.setPreferredSize(new Dimension(500,10));
@@ -180,7 +185,7 @@ public class SongbarGUI extends JPanel {
 
 
 
-     barPanel = new JPanel();
+        barPanel = new JPanel();
         barPanel.setLayout( new FlowLayout(FlowLayout.CENTER,10,3));
         barPanel.setBorder(new EmptyBorder(0, 10, 20, 50));
         barPanel.setBackground(new Color(20,20,20));
@@ -220,7 +225,7 @@ public class SongbarGUI extends JPanel {
         bar.addChangeListener(sliderHandler);
         bar.addMouseListener(skip);
 
-        filePath = (ArrayList) songs.reafFromFile("src\\songs\\song.txt");
+        filePath = (ArrayList) songs.reafFromFile("C:\\Users\\LENOVO\\Desktop\\JPotify\\JPotify\\src\\songs\\song.txt");
         if(filePath == null) filePath = new ArrayList();
         newSong();
     }
@@ -228,6 +233,7 @@ public class SongbarGUI extends JPanel {
         filePath = filePath1;
     }
     public static void renewThread(){ t = new Thread(mp3);}
+    public static MP3 getMp3(){return mp3;}
     public static void setSongNum(int i){songNum = i;}
     public static void newSong() throws InvalidDataException, IOException, UnsupportedTagException {
         System.out.println("djfhjhf");
@@ -240,7 +246,7 @@ public class SongbarGUI extends JPanel {
             System.out.println("biiiii");
             if (isShuffled % 2 != 0) {
                 songNum = mp3.shuffle(filePath.size());
-               // shuffle.setIcon(shuffleIcon);
+                // shuffle.setIcon(shuffleIcon);
             }
 
             Song song = (Song) filePath.get(songNum);
@@ -271,7 +277,7 @@ public class SongbarGUI extends JPanel {
         }
 
     }
-    public void nextOrPrev(){
+    public static void nextOrPrev(){
         if(counter>0) {
             counter = 1;
             timer.stop();
@@ -300,6 +306,10 @@ public class SongbarGUI extends JPanel {
                 ex.printStackTrace();
             }
         }
+        Song song =(Song) filePath.get(songNum);
+        song.setTimePlayed();
+        filePath.set(songNum,song);
+        Songs.orderingSongs(filePath);
     }
 
     public class Handler implements ActionListener {
@@ -335,6 +345,7 @@ public class SongbarGUI extends JPanel {
 
                 if(songNum<filePath.size()) {
                     nextOrPrev();
+                    pause.setIcon(pauseIcon);
                     System.out.println("next done");
                 }
             }
@@ -343,6 +354,7 @@ public class SongbarGUI extends JPanel {
                 songNum--;
                 if(songNum>=0) {
                     nextOrPrev();
+                    pause.setIcon(pauseIcon);
                     System.out.println("prev done");
                 }
             }
@@ -352,7 +364,7 @@ public class SongbarGUI extends JPanel {
                     favorite.setIcon(favoriteIcon);
                     System.out.println("favorite pressed");
                 }
-                    else {
+                else {
                     favorite.setIcon(favoriteOff);
                 }
             }
@@ -377,59 +389,63 @@ public class SongbarGUI extends JPanel {
             sliderValue++;
             if(sliderValue == bar.getMaximum()) {
                 songNum++;
-                nextOrPrev();
+                if(songNum<filePath.size()) {
+                    nextOrPrev();
+
+                }
+
             }
 
         }
     }
-   class SliderHandler implements ChangeListener {
-       @Override
-       public void stateChanged(ChangeEvent e) {
-           if (e.getSource() == volume) {
-               mp3.player.setVol((float) volume.getValue());
+    class SliderHandler implements ChangeListener {
+        @Override
+        public void stateChanged(ChangeEvent e) {
+            if (e.getSource() == volume) {
+                mp3.player.setVol((float) volume.getValue());
 
-           } else {
-               if (bar.getValue() % 60 < 10)
-                   songPlaying.setText(bar.getValue() / 60 + ":0" + bar.getValue() % 60);
-               else songPlaying.setText(bar.getValue() / 60 + ":" + bar.getValue() % 60);
-           }
-       }
-   }
-   public class SkipMusic implements MouseListener{
+            } else {
+                if (bar.getValue() % 60 < 10)
+                    songPlaying.setText(bar.getValue() / 60 + ":0" + bar.getValue() % 60);
+                else songPlaying.setText(bar.getValue() / 60 + ":" + bar.getValue() % 60);
+            }
+        }
+    }
+    public class SkipMusic implements MouseListener{
 
-       @Override
-       public void mouseClicked(MouseEvent e) {
-           if(e.getSource()== bar){
-               System.out.println("hiiii");
-               timer.stop();
-               mp3.stop();
-               t = new Thread(mp3);
-               System.out.println(bar.getValue());
-               sliderValue = bar.getValue();
-                   mp3.playLocation((int) (bar.getValue() * id3.getTotalFrames() / totalTime));
-                   mp3.playMusic(t);
-                   timer.start();
-           }
-       }
-       public void mousePressed(MouseEvent e) { }
-       public void mouseReleased(MouseEvent e) {
-           if(e.getSource() == bar){
-               mouseClicked(e);
-           }
-       }
-       public void mouseEntered(MouseEvent e) { }
-       public void mouseExited(MouseEvent e) { }
-   }
-       public static class TextNote extends JTextArea {
-           public TextNote(String text) {
-               super(text);
-               setBackground(null);
-               setEditable(false);
-               setBorder(null);
-               setLineWrap(true);
-               setWrapStyleWord(true);
-               setFocusable(false);
-           }
-       }
+        @Override
+        public void mouseClicked(MouseEvent e) {
+            if(e.getSource()== bar){
+                System.out.println("hiiii");
+                timer.stop();
+                mp3.stop();
+                t = new Thread(mp3);
+                System.out.println(bar.getValue());
+                sliderValue = bar.getValue();
+                mp3.playLocation((int) (bar.getValue() * id3.getTotalFrames() / totalTime));
+                mp3.playMusic(t);
+                timer.start();
+            }
+        }
+        public void mousePressed(MouseEvent e) { }
+        public void mouseReleased(MouseEvent e) {
+            if(e.getSource() == bar){
+                mouseClicked(e);
+            }
+        }
+        public void mouseEntered(MouseEvent e) { }
+        public void mouseExited(MouseEvent e) { }
+    }
+    public static class TextNote extends JTextArea {
+        public TextNote(String text) {
+            super(text);
+            setBackground(null);
+            setEditable(false);
+            setBorder(null);
+            setLineWrap(true);
+            setWrapStyleWord(true);
+            setFocusable(false);
+        }
+    }
 
 }

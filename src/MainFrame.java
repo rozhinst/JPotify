@@ -46,6 +46,7 @@ public class MainFrame extends JFrame {
         this.add(new JScrollPane(searchPanel),BorderLayout.NORTH);
         this.setExtendedState(this.getExtendedState() | JFrame.MAXIMIZED_BOTH);
 
+        this.pack();
         setVisible(true);
 
     }

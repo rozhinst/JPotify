@@ -17,7 +17,11 @@ public class MP3 implements Runnable {
         this.totalFrame = totalFrame;
         value = 0;
     }
-    public MP3(){}
+    public MP3(String path){
+        this.path = path;
+        value = 0;
+    }
+    public MP3(){value = 0;}
 
     public void playMusic(Thread t){
             this.t = t;
