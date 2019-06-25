@@ -20,7 +20,7 @@ public class SearchPanel extends JPanel {
         createPartControl();
     }
     public Song searchBySong(String name){
-        ArrayList<Song> songs = (ArrayList<Song>) Songs.reafFromFile("src\\songs\\song.txt");
+        ArrayList<Song> songs = (ArrayList<Song>) Songs.reafFromFile("C:\\Users\\LENOVO\\Desktop\\JPotify\\JPotify\\src\\songs\\song.txt");
         for(int i=0;i<songs.size();i++){
             if(songs.get(i).getName().contains(name))
                 return songs.get(i);
@@ -38,7 +38,7 @@ public class SearchPanel extends JPanel {
         this.setBorder(BorderFactory.createEmptyBorder(6, 6, 6, 1000));
 
        // JLabel findLabel = new JLabel();
-        searchIcon = new JLabel(new  ImageIcon(new ImageIcon("src\\icons\\search.png").getImage().getScaledInstance(17, 17, Image.SCALE_DEFAULT)));
+        searchIcon = new JLabel(new  ImageIcon(new ImageIcon("C:\\Users\\LENOVO\\Desktop\\JPotify\\JPotify\\src\\icons\\search.png").getImage().getScaledInstance(17, 17, Image.SCALE_DEFAULT)));
         // findLabel.setBackground(Color.GRAY);
 
         this.add(searchIcon);

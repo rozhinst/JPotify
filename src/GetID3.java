@@ -9,7 +9,7 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class GetID3 {
+public class GetID3 implements Serializable {
     //private byte[] aByte;
     private String path;
     private String title;

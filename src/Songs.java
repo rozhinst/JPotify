@@ -86,8 +86,8 @@ public class Songs  implements Serializable {
         }
         for(int i =0;i<songs.size();i++)
             albums.add(songs.get(i).getAlbum());
-        Songs.writeToFile(songs,"src\\songs\\song.txt");
-        Songs.writeToFile(albums,"src\\songs\\Albums.txt");
+        Songs.writeToFile(songs,"C:\\Users\\LENOVO\\Desktop\\JPotify\\JPotify\\src\\songs\\song.txt");
+        Songs.writeToFile(albums,"C:\\Users\\LENOVO\\Desktop\\JPotify\\JPotify\\src\\songs\\Albums.txt");
     }
 
 

@@ -3,67 +3,38 @@ import com.mpatric.mp3agic.UnsupportedTagException;
 
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-public class Albums extends Songs{
-    private static GetID3 id3;
-    private static String name;
-    private static ArrayList<Song> albumSong;
+public class Albums extends Songs implements Serializable {
+    private String name;
+    private ArrayList<Song> albumSong;
     public Albums() {
         super();
         albumSong = new ArrayList<>();
        // albumSong
         ///yadet bashe aval song be album basheha!!!!
     }
-    public BufferedImage showPicture() throws InvalidDataException, IOException, UnsupportedTagException {
-     //////////////////////   this.
-        id3 = new GetID3(albumSong.get(0).getPath());
-        return id3.getImg();
+//    public static Albums manageAlbum(Song song) throws InvalidDataException, IOException, UnsupportedTagException {
+//
+//       // return  albums1;
+//    }
+    public void setId3(GetID3 id3){
+        String[] s = id3.getDetails().get(1).split(":");
+        name = s[1] ;
     }
-    public static Albums manageAlbum(Song song) throws InvalidDataException, IOException, UnsupportedTagException {
-        ArrayList<Albums> albums = (ArrayList<Albums>) Songs.reafFromFile("src\\songs\\Albums.txt");
-        if(albums == null) albums =new ArrayList<>();
-        Albums albums1 = new Albums();
-        GetID3 id3 = new GetID3(song.getPath());
-        if(albums.size() == 0){
-            albums1 = new Albums();
-            albums1.setAlbumSong(song);
-            albums1.setName();
-            albums.add(albums1);
-        }
-        else {
-            for (int i = 0; i < albums.size(); i++) {
-                if (id3.getDetails().get(1).contains(albums.get(i).getName()))
-                    albums.get(i).setAlbumSong(song);
-                else {
-
-                    song.setAlbum(albums1);
-                    albums1.setAlbumSong(song);
-                    albums1.setName();
-                    albums.add(albums1);
-                }
-            }
-        }
-        System.out.println(albums.size()+"helooooooooooooooooo");
-        Songs.writeToFile(albums,"src\\songs\\Albums.txt");
-        return  albums1;
-    }
-    public static void setName() throws InvalidDataException, IOException, UnsupportedTagException {
-        id3 = new GetID3(albumSong.get(0).getPath());
-        name = id3.getDetails().get(1);
-    }
-    public  String getName(){
+    public String getName(){
         return name;
     }
-    public static ArrayList getAlbumSongs(){return albumSong;}
-    public static void setAlbumSong(Song song){
-        albumSong.add(song);
+    public ArrayList getAlbumSongs(){return albumSong;}
+    public void setAlbumSong(ArrayList<Song> song){
+        albumSong = song;
     }
 
     public void removeAlbumSongs(){
-        ArrayList<Song> songs = (ArrayList<Song>) this.reafFromFile("src\\songs\\song.txt");
-        ArrayList albums = (ArrayList) Songs.reafFromFile("src\\songs\\Albums.txt");
+        ArrayList<Song> songs = (ArrayList<Song>) this.reafFromFile("C:\\Users\\LENOVO\\Desktop\\JPotify\\JPotify\\src\\songs\\song.txt");
+        ArrayList albums = (ArrayList) Songs.reafFromFile("C:\\Users\\LENOVO\\Desktop\\JPotify\\JPotify\\src\\songs\\Albums.txt");
         Iterator it = songs.iterator();
         Song s;
         while (it.hasNext()) {
@@ -73,8 +44,8 @@ public class Albums extends Songs{
                     this.removeSongs(s);
         }
         albums.remove(this);
-        this.writeToFile(this.getSongArrays(),"src\\songs\\song.txt");
+        this.writeToFile(this.getSongArrays(),"C:\\Users\\LENOVO\\Desktop\\JPotify\\JPotify\\src\\songs\\song.txt");
         //this.writeToFile(this.getSongname(),"C:\\Users\\LENOVO\\Desktop\\JPotify\\JPotify\\src\\songs\\SongNames.txt");
-        this.writeToFile(albums,"src\\songs\\Albums.txt");
+        this.writeToFile(albums,"C:\\Users\\LENOVO\\Desktop\\JPotify\\JPotify\\src\\songs\\Albums.txt");
     }
 }

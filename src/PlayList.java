@@ -19,13 +19,13 @@ public class PlayList implements Serializable {
 
     public void addSongs(int index) {
         Songs song = new Songs();
-        ArrayList<Song> songs = (ArrayList<Song>) song.reafFromFile("src\\songs\\song.txt");
+        ArrayList<Song> songs = (ArrayList<Song>) song.reafFromFile("C:\\Users\\LENOVO\\Desktop\\JPotify\\JPotify\\src\\songs\\song.txt");
         playListSongs.add(songs.get(index));//iteration?
     }
 
 
     public void removeSongs(int index) {
-        ArrayList<Song> songs = (ArrayList<Song>) Songs.reafFromFile("src\\songs\\song.txt");
+        ArrayList<Song> songs = (ArrayList<Song>) Songs.reafFromFile("C:\\Users\\LENOVO\\Desktop\\JPotify\\JPotify\\src\\songs\\song.txt");
         playListSongs.remove(songs.get(index));//iteration????
     }
 

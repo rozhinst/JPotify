@@ -13,7 +13,7 @@ public class MiddlePage extends JPanel {
     private Border emptyBorder;
     private static GetID3 id3;
     private static  ArrayList fileOfSongs;
-    private static  ArrayList fileOfAlbums;
+    private static  ArrayList<Albums> fileOfAlbums;
     private static ArrayList <JButton> songs;
     private  static ArrayList <JButton> albums;
     //private
@@ -43,20 +43,20 @@ public class MiddlePage extends JPanel {
 
         songsInLibrary.setLayout(new GridLayout(0,4,10,10));
 
-        addSongsToLibraryPannel("src\\songs\\song.txt");
+        addSongsToLibraryPannel("C:\\Users\\LENOVO\\Desktop\\JPotify\\JPotify\\src\\songs\\song.txt");
         this.add(songsInLibrary);
         revalidate();
 
 
         albumsInLibrary.setBackground(new Color(0,0,0,0));
         albumsInLibrary.setLayout(new GridLayout(0,4,10,10));
-     //   addAlbumsToLibraryPanel("src\\songs\\Albums.txt");
+        addAlbumsToLibraryPanel("C:\\Users\\LENOVO\\Desktop\\JPotify\\JPotify\\src\\songs\\Albums.txt");
 
 
     }
 
     private void addAlbumsToLibraryPanel(String path) throws InvalidDataException, IOException, UnsupportedTagException {
-        fileOfAlbums= (ArrayList) Songs.reafFromFile(path);
+        fileOfAlbums= (ArrayList<Albums>) Songs.reafFromFile(path);
         if(fileOfAlbums == null){
             fileOfAlbums = new ArrayList();
         }
@@ -73,9 +73,14 @@ public class MiddlePage extends JPanel {
 
 
         for (int i = 0; i <fileOfAlbums.size() ; i++) {
-            Albums album = (Albums) fileOfAlbums.get(i);
+            Albums album = fileOfAlbums.get(i);
+            System.out.println(fileOfAlbums.size());
             System.out.println(album.getName());
-            Image newImage = album.showPicture().getScaledInstance(150, 150, Image.SCALE_SMOOTH);
+            System.out.println(album.getAlbumSongs().size()+"   kkkkkk");
+            Song song =(Song) album.getAlbumSongs().get(0);
+            System.out.println(song.getName());
+            GetID3 id3 = new GetID3(song.getPath());
+            Image newImage = id3.getImg().getScaledInstance(150, 150, Image.SCALE_SMOOTH);
             JLabel artWork = new JLabel();
             artWork.setIcon(new ImageIcon(newImage));
             albums.get(i).add(artWork);

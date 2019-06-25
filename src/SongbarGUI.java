@@ -72,17 +72,17 @@ public class SongbarGUI extends JPanel {
         songBar.setLayout(new BorderLayout());
 
         //Icons of playBottons
-        playIcon = new ImageIcon(new ImageIcon("src\\icons\\play.png").getImage().getScaledInstance(25, 25, Image.SCALE_DEFAULT));
-        pauseIcon = new ImageIcon(new ImageIcon("src\\icons\\pause-512.png").getImage().getScaledInstance(25, 25, Image.SCALE_DEFAULT));
-        nextIcon = new ImageIcon(new ImageIcon("src\\icons\\next.png").getImage().getScaledInstance(20, 20, Image.SCALE_DEFAULT));
-        previousIcon = new ImageIcon(new ImageIcon("src\\icons\\previous.png").getImage().getScaledInstance(20, 20, Image.SCALE_DEFAULT));
-        shuffleIcon = new ImageIcon(new ImageIcon("src\\icons\\Shuffle-2-icon.png").getImage().getScaledInstance(20, 20, Image.SCALE_DEFAULT));
-        shuffleOff = new ImageIcon(new ImageIcon("src\\icons\\shuffleOff.png").getImage().getScaledInstance(20, 20, Image.SCALE_DEFAULT));
+        playIcon = new ImageIcon(new ImageIcon("C:\\Users\\LENOVO\\Desktop\\JPotify\\JPotify\\src\\icons\\play.png").getImage().getScaledInstance(25, 25, Image.SCALE_DEFAULT));
+        pauseIcon = new ImageIcon(new ImageIcon("C:\\Users\\LENOVO\\Desktop\\JPotify\\JPotify\\src\\icons\\pause-512.png").getImage().getScaledInstance(25, 25, Image.SCALE_DEFAULT));
+        nextIcon = new ImageIcon(new ImageIcon("C:\\Users\\LENOVO\\Desktop\\JPotify\\JPotify\\src\\icons\\next.png").getImage().getScaledInstance(20, 20, Image.SCALE_DEFAULT));
+        previousIcon = new ImageIcon(new ImageIcon("C:\\Users\\LENOVO\\Desktop\\JPotify\\JPotify\\src\\icons\\previous.png").getImage().getScaledInstance(20, 20, Image.SCALE_DEFAULT));
+        shuffleIcon = new ImageIcon(new ImageIcon("C:\\Users\\LENOVO\\Desktop\\JPotify\\JPotify\\src\\icons\\Shuffle-2-icon.png").getImage().getScaledInstance(20, 20, Image.SCALE_DEFAULT));
+        shuffleOff = new ImageIcon(new ImageIcon("C:\\Users\\LENOVO\\Desktop\\JPotify\\JPotify\\src\\icons\\shuffleOff.png").getImage().getScaledInstance(20, 20, Image.SCALE_DEFAULT));
 
-        favoriteIcon = new ImageIcon(new ImageIcon("src\\icons\\filledFavorite.png").getImage().getScaledInstance(25, 25, Image.SCALE_DEFAULT));
-        favoriteOff =  new ImageIcon(new ImageIcon("src\\icons\\unfilledFavorite.png").getImage().getScaledInstance(25, 25, Image.SCALE_DEFAULT));
+        favoriteIcon = new ImageIcon(new ImageIcon("C:\\Users\\LENOVO\\Desktop\\JPotify\\JPotify\\src\\icons\\filledFavorite.png").getImage().getScaledInstance(25, 25, Image.SCALE_DEFAULT));
+        favoriteOff =  new ImageIcon(new ImageIcon("C:\\Users\\LENOVO\\Desktop\\JPotify\\JPotify\\src\\icons\\unfilledFavorite.png").getImage().getScaledInstance(25, 25, Image.SCALE_DEFAULT));
 
-        refreshIcon = new ImageIcon(new ImageIcon("src\\icons\\refresh.png").getImage().getScaledInstance(20, 20, Image.SCALE_DEFAULT));
+        refreshIcon = new ImageIcon(new ImageIcon("C:\\Users\\LENOVO\\Desktop\\JPotify\\JPotify\\src\\icons\\refresh.png").getImage().getScaledInstance(20, 20, Image.SCALE_DEFAULT));
 
 
 
@@ -225,13 +225,14 @@ public class SongbarGUI extends JPanel {
         bar.addChangeListener(sliderHandler);
         bar.addMouseListener(skip);
 
-        filePath = (ArrayList) songs.reafFromFile("src\\songs\\song.txt");
+        filePath = (ArrayList) songs.reafFromFile("C:\\Users\\LENOVO\\Desktop\\JPotify\\JPotify\\src\\songs\\song.txt");
         if(filePath == null) filePath = new ArrayList();
         newSong();
     }
     public static void setFilePath(ArrayList filePath1){
         filePath = filePath1;
     }
+    public static ArrayList<Song> getFilePath(){return filePath;}
     public static void renewThread(){ t = new Thread(mp3);}
     public static MP3 getMp3(){return mp3;}
     public static void setSongNum(int i){songNum = i;}
@@ -309,7 +310,6 @@ public class SongbarGUI extends JPanel {
         Song song =(Song) filePath.get(songNum);
         song.setTimePlayed();
         filePath.set(songNum,song);
-        Songs.orderingSongs(filePath);
     }
 
     public class Handler implements ActionListener {
