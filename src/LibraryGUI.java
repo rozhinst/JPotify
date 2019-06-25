@@ -134,6 +134,7 @@ public class LibraryGUI extends JPanel{
                 Songs.orderingSongs((ArrayList<Song>) Songs.reafFromFile("C:\\Users\\LENOVO\\Desktop\\JPotify\\JPotify\\src\\songs\\song.txt"));
                 //reValidateMiddlePage("C:\\Users\\LENOVO\\Desktop\\JPotify\\JPotify\\src\\songs\\Albums.txt");
             }
+
         }
     }
 

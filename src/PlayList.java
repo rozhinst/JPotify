@@ -23,6 +23,7 @@ public class PlayList implements Serializable {
         playListSongs.add(songs.get(index));//iteration?
     }
 
+
     public void removeSongs(int index) {
         ArrayList<Song> songs = (ArrayList<Song>) Songs.reafFromFile("C:\\Users\\LENOVO\\Desktop\\JPotify\\JPotify\\src\\songs\\song.txt");
         playListSongs.remove(songs.get(index));//iteration????

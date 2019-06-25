@@ -16,6 +16,7 @@ public class FriendsActivityGUI extends JPanel {
         setBackground(new Color(20,20,20));
         setPreferredSize(new Dimension(150,80));
         this.add(label);
+
     }
 }
 

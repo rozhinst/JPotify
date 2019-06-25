@@ -7,6 +7,7 @@ import javax.swing.border.Border;
 import java.awt.*;
 import java.io.IOException;
 
+
 public class MainFrame extends JFrame {
     private final String WINDOWS_TITLE = "JPotify";
     private final int WIDTH = 1000;

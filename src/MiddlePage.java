@@ -23,6 +23,7 @@ public class MiddlePage extends JPanel {
     private static JTextArea details;
     private Handler handler;
 
+
     public MiddlePage() throws InvalidDataException, IOException, UnsupportedTagException {
 
         //this.setPreferredSize(new Dimension(200,200));

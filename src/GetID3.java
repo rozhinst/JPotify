@@ -68,6 +68,7 @@ public class GetID3 {
         }
     }
 
+
     public ArrayList<String> getDetails() {
         return details;
     }
