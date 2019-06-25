@@ -1,6 +1,7 @@
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
 import javax.swing.*;
 
@@ -17,6 +18,14 @@ public class SearchPanel extends JPanel {
         //  this.frame = frame;
         //  this.model = model;
         createPartControl();
+    }
+    public Song searchBySong(String name){
+        ArrayList<Song> songs = (ArrayList<Song>) Songs.reafFromFile("src\\songs\\song.txt");
+        for(int i=0;i<songs.size();i++){
+            if(songs.get(i).getName().contains(name))
+                return songs.get(i);
+        }
+        return null;
     }
 
     protected void createPartControl() {
@@ -43,15 +52,22 @@ public class SearchPanel extends JPanel {
         this.add(Box.createRigidArea(new Dimension(6, 0)));
 
         JButton findButton = new JButton("Search");
+        findButton.setFocusable(false);
         // findButton.add(new ImageIcon(new ImageIcon("src\\favorite.png").getImage().getScaledInstance(35, 35, Image.SCALE_DEFAULT));
         findButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent event) {
+                if(event.getSource() == findButton){
+                   Song song = searchBySong(findTextField.getText());
+                   if(song ==null) System.out.println("naaaaaaaaaa");
+                    System.out.println(song.getName()+"  "+song.getPath());
 
+                }
             }
         });
         this.add(findButton);
     }
+
 
 
 }

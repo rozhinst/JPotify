@@ -44,7 +44,7 @@ public class DisplaySongs extends JFrame {
 
     }
     public void addAlbum() throws InvalidDataException, IOException, UnsupportedTagException {
-        ArrayList albums = (ArrayList) Songs.reafFromFile("C:\\Users\\LENOVO\\Desktop\\JPotify\\JPotify\\src\\songs\\Albums.txt");
+        ArrayList albums = (ArrayList) Songs.reafFromFile("src\\songs\\Albums.txt");
         Albums album = new Albums();
         if (albums == null) albums = new ArrayList();
         JFileChooser chooser = new JFileChooser("src");
@@ -59,19 +59,20 @@ public class DisplaySongs extends JFrame {
         }
         album.setName();
         albums.add(album);
-        Songs.writeToFile(albums, "C:\\Users\\LENOVO\\Desktop\\JPotify\\JPotify\\src\\songs\\Albums.txt");
+        Songs.writeToFile(albums, "src\\songs\\Albums.txt");
 
     }
     public void creatPlayList(String name){
-        ArrayList playLists = (ArrayList) Songs.reafFromFile("C:\\Users\\LENOVO\\Desktop\\JPotify\\JPotify\\src\\songs\\PlayLists.txt");
+        ArrayList playLists = (ArrayList) Songs.reafFromFile("src\\songs\\PlayLists.txt");
         PlayList playList = new PlayList(name);
         if(playLists == null) playLists = new ArrayList();
         playLists.add(playList);
-        Songs.writeToFile(playLists,"C:\\Users\\LENOVO\\Desktop\\JPotify\\JPotify\\src\\songs\\PlayLists.txt");
+        Songs.writeToFile(playLists,"src\\songs\\PlayLists.txt");
+
 
     }
     public void removePlaylist(PlayList playList ){
-        ArrayList playLists = (ArrayList) Songs.reafFromFile("C:\\Users\\LENOVO\\Desktop\\JPotify\\JPotify\\src\\songs\\PlayLists.txt");
+        ArrayList playLists = (ArrayList) Songs.reafFromFile("src\\songs\\PlayLists.txt");
         Iterator it = playLists.iterator();
         while(it.hasNext()){
             PlayList play = (PlayList) it.next();
@@ -79,7 +80,7 @@ public class DisplaySongs extends JFrame {
                 playLists.remove(play);
             }
         }
-        Songs.writeToFile(playLists, "C:\\Users\\LENOVO\\Desktop\\JPotify\\JPotify\\src\\songs\\PlayLists.txt");
+        Songs.writeToFile(playLists, "src\\songs\\PlayLists.txt");
     }
 
 

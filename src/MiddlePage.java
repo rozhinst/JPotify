@@ -50,7 +50,7 @@ public class MiddlePage extends JPanel {
 
         albumsInLibrary.setBackground(new Color(0,0,0,0));
         albumsInLibrary.setLayout(new GridLayout(0,4,10,10));
-        addAlbumsToLibraryPanel("src\\songs\\Albums.txt");
+     //   addAlbumsToLibraryPanel("src\\songs\\Albums.txt");
 
 
     }

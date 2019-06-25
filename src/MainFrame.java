@@ -7,6 +7,7 @@ import javax.swing.border.Border;
 import java.awt.*;
 import java.io.IOException;
 
+
 public class MainFrame extends JFrame {
     private final String WINDOWS_TITLE = "JPotify";
     private final int WIDTH = 1000;
@@ -46,12 +47,14 @@ public class MainFrame extends JFrame {
         this.add(new JScrollPane(searchPanel),BorderLayout.NORTH);
         this.setExtendedState(this.getExtendedState() | JFrame.MAXIMIZED_BOTH);
 
+        this.pack();
         setVisible(true);
 
     }
 }
 class Main{
     public static void main(String[] args) throws IOException, InvalidDataException, UnsupportedTagException {
+      //  UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         MainFrame frame = new MainFrame();
     }
 }

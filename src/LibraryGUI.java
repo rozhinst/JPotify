@@ -16,10 +16,11 @@ public class LibraryGUI extends JPanel{
     private JButton addToLibrary;
     private JComboBox<Object> comboBox;
     private MiddlePage middlePage;
+    private Handler handler;
     public LibraryGUI(){
         super();
         Border emptyBorder = BorderFactory.createEmptyBorder();
-
+        Handler handler = new Handler();
 
         this.setBackground(new Color(20,20,20));
         //this.setBackground(new Color(150,0,205));
@@ -36,20 +37,26 @@ public class LibraryGUI extends JPanel{
         song.setBorder(emptyBorder);
         song.setBackground(new Color(20,20,20));
         song.setForeground(Color.WHITE);
+        song.setFocusable(false);
+        song.addActionListener(handler);
         album.setBackground(new Color(20,20,20));
         album.setBorder(emptyBorder);
         album.setForeground(Color.WHITE);
+        album.setFocusable(false);
         addToLibrary = new JButton("AddToLibrary");
         addToLibrary.setForeground(Color.WHITE);
         addToLibrary.setBorder(emptyBorder);
         addToLibrary.setBackground(new Color(20,20,20));
+        addToLibrary.setFocusable(false);
         song.setPreferredSize(new Dimension(90,60));
         album.setPreferredSize(new Dimension(90,60));
         addToLibrary.setPreferredSize(new Dimension(90,60));
 
         JSeparator sep = new JSeparator();
 
-        Handler handler = new Handler();
+
+
+
 
         add(label);
         add(addToLibrary);
@@ -57,17 +64,43 @@ public class LibraryGUI extends JPanel{
         add(song);
         add(sep);
         addToLibrary.addActionListener(handler);
+        album.addActionListener(handler);
 
     }
 
     public void setMiddlePage(MiddlePage middlePage) {
         this.middlePage = middlePage;
     }
+    public void reValidateMiddlePage(String path){
+        middlePage.getSongsInLibrary().removeAll();
+        try {
+            middlePage.addSongsToLibraryPannel(path);
+        } catch (InvalidDataException ex) {
+            ex.printStackTrace();
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        } catch (UnsupportedTagException ex) {
+            ex.printStackTrace();
+        }
+        middlePage.revalidate();
+    }
 
     public class Handler implements ActionListener{
 
         @Override
         public void actionPerformed(ActionEvent e) {
+            if(e.getSource()==song){
+              //  middlePage.
+               // middlePage.getSongsInLibrary().revalidate();
+                reValidateMiddlePage("src\\songs\\song.txt");
+                middlePage.getSongsInLibrary().setVisible(true);
+            }
+            if(e.getSource()==album){
+                middlePage.getSongsInLibrary().setVisible(false);
+              //  middlePage.getSongsInLibrary().revalidate();
+                middlePage.getAlbumsInLibrary().setVisible(true);
+                reValidateMiddlePage("src\\songs\\song.txt");
+            }
             if(e.getSource() ==  addToLibrary ){
                 Songs song = new Songs();
                 boolean isNull = false;
@@ -79,7 +112,11 @@ public class LibraryGUI extends JPanel{
                 }
                 //if(name == null) name = new ArrayList();
                 try {
-                    song.addSong(a);
+                    Song songToAlbum = song.addSong(a);
+                    Albums album = Albums.manageAlbum(songToAlbum);
+                    songToAlbum.setAlbum(album);
+                   //if(songToAlbum == null) System.out.println("null");
+                    System.out.println("hey");
                 } catch (InvalidDataException ex) {
                     ex.printStackTrace();
                 } catch (IOException ex) {
@@ -90,6 +127,7 @@ public class LibraryGUI extends JPanel{
                 song.writeToFile(song.getSongArrays(),"src\\songs\\song.txt");
                 //playList.writeToFile(name,"C:\\Users\\LENOVO\\Desktop\\JPotify\\JPotify\\src\\songs\\SongNames.txt");
                 SongbarGUI.setFilePath((ArrayList) song.reafFromFile("src\\songs\\song.txt"));
+               // Albums.manageAlbum(songToAlbum);
 
                 if(isNull) {
                     try {
@@ -102,22 +140,17 @@ public class LibraryGUI extends JPanel{
                         ex.printStackTrace();
                     }
                 }
-                middlePage.getSongsInLibrary().removeAll();
-                try {
-                    middlePage.addToLibraryPannel("src\\songs\\song.txt");
-                } catch (InvalidDataException ex) {
-                    ex.printStackTrace();
-                } catch (IOException ex) {
-                    ex.printStackTrace();
-                } catch (UnsupportedTagException ex) {
-                    ex.printStackTrace();
-                }
-                middlePage.revalidate();
+                reValidateMiddlePage("src\\songs\\song.txt");
 
 
                 //playList.reafFromFile("C:\\Users\\LENOVO\\Desktop\\JPotify\\JPotify\\src\\songs\\SongNames.txt");
 
             }
+            if(e.getSource() == album){
+                Songs.orderingSongs((ArrayList<Song>) Songs.reafFromFile("src\\songs\\song.txt"));
+                //reValidateMiddlePage("C:\\Users\\LENOVO\\Desktop\\JPotify\\JPotify\\src\\songs\\Albums.txt");
+            }
+
         }
     }
 

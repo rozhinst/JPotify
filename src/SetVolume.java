@@ -38,6 +38,7 @@ class SetVolume extends AudioDeviceBase {
         return info;
     }
 
+
     public void open(AudioFormat fmt) throws JavaLayerException {
         if (!isOpen()) {
             setAudioFormat(fmt);
