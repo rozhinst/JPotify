@@ -16,7 +16,7 @@ public class DisplaySongs {
 
     }
     public void addAlbum() throws InvalidDataException, IOException, UnsupportedTagException {
-        ArrayList albums = (ArrayList) Songs.reafFromFile("C:\\Users\\LENOVO\\Desktop\\JPotify\\JPotify\\src\\songs\\Albums.txt");
+        ArrayList<Albums> albums = Songs.reafAlbumsFromFile("C:\\Users\\LENOVO\\Desktop\\JPotify\\JPotify\\src\\songs\\Albums.bin");
         Albums album = new Albums();
         if (albums == null) albums = new ArrayList();
         JFileChooser chooser = new JFileChooser("src");
@@ -31,20 +31,20 @@ public class DisplaySongs {
         }
         //album.setName();
         albums.add(album);
-        Songs.writeToFile(albums, "C:\\Users\\LENOVO\\Desktop\\JPotify\\JPotify\\src\\songs\\Albums.txt");
+        Songs.writeAlbumsToFile(albums, "C:\\Users\\LENOVO\\Desktop\\JPotify\\JPotify\\src\\songs\\Albums.bin");
 
     }
-    public void creatPlayList(String name){
-        ArrayList playLists = (ArrayList) Songs.reafFromFile("C:\\Users\\LENOVO\\Desktop\\JPotify\\JPotify\\src\\playlists\\playists.txt");
+    public void creatPlayList(String name) throws IOException {
+        ArrayList<PlayList> playLists = Songs.reafPlayListFromFile("C:\\Users\\LENOVO\\Desktop\\JPotify\\JPotify\\src\\playlists\\playists.bin");
         PlayList playList = new PlayList(name);
         if(playLists == null) playLists = new ArrayList();
         playLists.add(playList);
-        Songs.writeToFile(playLists,"C:\\Users\\LENOVO\\Desktop\\JPotify\\JPotify\\src\\playlists\\playists.txt");
+        Songs.writeLibrariesToFile(playLists,"C:\\Users\\LENOVO\\Desktop\\JPotify\\JPotify\\src\\playlists\\playists.bin");
 
 
     }
-    public void removePlaylist(PlayList playList ){
-        ArrayList playLists = (ArrayList) Songs.reafFromFile("C:\\Users\\LENOVO\\Desktop\\JPotify\\JPotify\\src\\playlists\\playists.txt");
+    public void removePlaylist(PlayList playList ) throws IOException {
+        ArrayList<PlayList> playLists =  Songs.reafPlayListFromFile("C:\\Users\\LENOVO\\Desktop\\JPotify\\JPotify\\src\\playlists\\playists.bin");
         Iterator it = playLists.iterator();
         while(it.hasNext()){
             PlayList play = (PlayList) it.next();
@@ -52,10 +52,10 @@ public class DisplaySongs {
                 playLists.remove(play);
             }
         }
-        Songs.writeToFile(playLists, "C:\\Users\\LENOVO\\Desktop\\JPotify\\JPotify\\src\\playlists\\playists.txt");
+        Songs.writeLibrariesToFile(playLists, "C:\\Users\\LENOVO\\Desktop\\JPotify\\JPotify\\src\\playlists\\playists.bin");
     }
     public void managingAlbumSongs(Song song) throws InvalidDataException, IOException, UnsupportedTagException {
-        ArrayList<Albums> albums = (ArrayList<Albums>) Songs.reafFromFile("C:\\Users\\LENOVO\\Desktop\\JPotify\\JPotify\\src\\songs\\Albums.txt");
+        ArrayList<Albums> albums = Songs.reafAlbumsFromFile("C:\\Users\\LENOVO\\Desktop\\JPotify\\JPotify\\src\\songs\\Albums.bin");
         if(albums == null) albums = new ArrayList<>();
         boolean exist = false;
         ArrayList<Song> albumSongs = new ArrayList<>();
@@ -63,10 +63,11 @@ public class DisplaySongs {
         String [] s = id3.getDetails().get(1).split(":");
         for (int i=0;i<albums.size();i++){
             if(s[1].equals(albums.get(i).getName())){
-              albumSongs =  albums.get(i).getSongArrays();
+              albumSongs =  albums.get(i).getAlbumSongs();
               albumSongs.add(song);
               albums.get(i).setAlbumSong(albumSongs);
               exist = true;
+              break;
             }
         }
         if(exist == false || albums.size() == 0 ){
@@ -78,7 +79,8 @@ public class DisplaySongs {
             //album.setName();
             albums.add(album);
         }
-        Songs.writeToFile(albums,"C:\\Users\\LENOVO\\Desktop\\JPotify\\JPotify\\src\\songs\\Albums.txt");
+        for(int i =0;i<albums.size();i++) System.out.println(albums.get(i).getName());
+        Songs.writeAlbumsToFile(albums,"C:\\Users\\LENOVO\\Desktop\\JPotify\\JPotify\\src\\songs\\Albums.bin");
     }
 
     }

@@ -32,9 +32,9 @@ public class Albums extends Songs implements Serializable {
         albumSong = song;
     }
 
-    public void removeAlbumSongs(){
-        ArrayList<Song> songs = (ArrayList<Song>) this.reafFromFile("C:\\Users\\LENOVO\\Desktop\\JPotify\\JPotify\\src\\songs\\song.txt");
-        ArrayList albums = (ArrayList) Songs.reafFromFile("C:\\Users\\LENOVO\\Desktop\\JPotify\\JPotify\\src\\songs\\Albums.txt");
+    public void removeAlbumSongs() throws IOException {
+        ArrayList<Song> songs =  this.reafSongsFromFile("C:\\Users\\LENOVO\\Desktop\\JPotify\\JPotify\\src\\songs\\song.bin");
+        ArrayList<Albums> albums = Songs.reafAlbumsFromFile("C:\\Users\\LENOVO\\Desktop\\JPotify\\JPotify\\src\\songs\\Albums.bin");
         Iterator it = songs.iterator();
         Song s;
         while (it.hasNext()) {
@@ -44,8 +44,8 @@ public class Albums extends Songs implements Serializable {
                     this.removeSongs(s);
         }
         albums.remove(this);
-        this.writeToFile(this.getSongArrays(),"C:\\Users\\LENOVO\\Desktop\\JPotify\\JPotify\\src\\songs\\song.txt");
+        this.writeSongsToFile(this.getSongArrays(),"C:\\Users\\LENOVO\\Desktop\\JPotify\\JPotify\\src\\songs\\song.bin");
         //this.writeToFile(this.getSongname(),"C:\\Users\\LENOVO\\Desktop\\JPotify\\JPotify\\src\\songs\\SongNames.txt");
-        this.writeToFile(albums,"C:\\Users\\LENOVO\\Desktop\\JPotify\\JPotify\\src\\songs\\Albums.txt");
+        this.writeAlbumsToFile(albums,"C:\\Users\\LENOVO\\Desktop\\JPotify\\JPotify\\src\\songs\\Albums.bin");
     }
 }

@@ -48,6 +48,7 @@ public class SongbarGUI extends JPanel {
     private static GetID3 id3;
     private static int isShuffled;
     private int isFavorite;
+    private int isReplayed;
 
     private static String temp = "";
     private String path;
@@ -119,6 +120,7 @@ public class SongbarGUI extends JPanel {
         timer = new Timer(1000, new Slider() );
         isShuffled = 0;
         isFavorite = 0;
+        isReplayed = 0;
 
 
         pause.setIcon(playIcon);
@@ -219,13 +221,14 @@ public class SongbarGUI extends JPanel {
         next.addActionListener(handler);
         prev.addActionListener(handler);
         shuffle.addActionListener(handler);
+        refresh.addActionListener(handler);
         SkipMusic skip = new SkipMusic();
         sliderHandler = new SliderHandler();
         volume.addChangeListener(sliderHandler);
         bar.addChangeListener(sliderHandler);
         bar.addMouseListener(skip);
 
-        filePath = (ArrayList) songs.reafFromFile("C:\\Users\\LENOVO\\Desktop\\JPotify\\JPotify\\src\\songs\\song.txt");
+        filePath = songs.reafSongsFromFile("C:\\Users\\LENOVO\\Desktop\\JPotify\\JPotify\\src\\songs\\song.bin");
         if(filePath == null) filePath = new ArrayList();
         newSong();
     }
@@ -378,6 +381,13 @@ public class SongbarGUI extends JPanel {
                     shuffle.setIcon(shuffleOff);
                 }
             }
+            if(e.getSource() == refresh){
+                isReplayed++;
+                System.out.println("refresh is pressed");
+                if(isReplayed%2 == 1){
+                    /////
+                }
+            }
 
 
         }
@@ -388,10 +398,21 @@ public class SongbarGUI extends JPanel {
             bar.setValue(sliderValue);
             sliderValue++;
             if(sliderValue == bar.getMaximum()) {
-                songNum++;
-                if(songNum<filePath.size()) {
-                    nextOrPrev();
+                if(isReplayed%2!=1) {
+                    songNum++;
+                    if (songNum < filePath.size()) {
+                        nextOrPrev();
 
+                    }
+                }
+                else{
+                    sliderValue = 0;
+                    //mp3.playMusic(t);
+                    mp3.playLocation(0);
+                    timer.restart();
+                    t = new Thread(mp3);
+                    mp3.playMusic(t);
+                    pause.setIcon(pauseIcon);
                 }
 
             }

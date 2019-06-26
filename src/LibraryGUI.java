@@ -3,6 +3,7 @@ import com.mpatric.mp3agic.UnsupportedTagException;
 
 import javax.swing.*;
 import javax.swing.border.Border;
+import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -15,6 +16,8 @@ public class LibraryGUI extends JPanel{
     private JButton album;
     private JButton addToLibrary;
     private JComboBox<Object> comboBox;
+    private JPanel playlistPannel;
+    private JLabel playlistLabel;
     private MiddlePage middlePage;
     private Handler handler;
     private DisplaySongs display;
@@ -36,6 +39,8 @@ public class LibraryGUI extends JPanel{
 
         song = new JButton("Songs");
         album = new JButton("Albums");
+        playlistPannel = new JPanel();
+        playlistLabel = new JLabel("Playlist");
         song.setBorder(emptyBorder);
         song.setBackground(new Color(20,20,20));
         song.setForeground(Color.WHITE);
@@ -53,6 +58,8 @@ public class LibraryGUI extends JPanel{
         song.setPreferredSize(new Dimension(90,60));
         album.setPreferredSize(new Dimension(90,60));
         addToLibrary.setPreferredSize(new Dimension(90,60));
+        playlistLabel.setBorder(new EmptyBorder(0,5,0,0));
+        playlistLabel.setPreferredSize(new Dimension(90,35));
 
         JSeparator sep = new JSeparator();
 
@@ -65,6 +72,9 @@ public class LibraryGUI extends JPanel{
         add(album);
         add(song);
         add(sep);
+        //add(playlistPannel);
+        //playlistPannel.add(playlistLabel);
+
         addToLibrary.addActionListener(handler);
         album.addActionListener(handler);
 
@@ -86,8 +96,10 @@ public class LibraryGUI extends JPanel{
         }
         middlePage.revalidate();
     }
-public void reValidateAlbums(){
-        middlePage.getSongsInLibrary().removeAll();
+public void reValidateAlbums() throws InvalidDataException, IOException, UnsupportedTagException {
+       // middlePage.getSongsInLibrary().removeAll();
+        middlePage.addAlbumsToLibraryPanel("C:\\Users\\LENOVO\\Desktop\\JPotify\\JPotify\\src\\songs\\Albums.bin");
+        middlePage.revalidate();
 }
     public class Handler implements ActionListener{
 
@@ -97,21 +109,39 @@ public void reValidateAlbums(){
                 Songs.orderingSongs(SongbarGUI.getFilePath());
               //  middlePage.
                // middlePage.getSongsInLibrary().revalidate();
-                reValidateMiddlePage("C:\\Users\\LENOVO\\Desktop\\JPotify\\JPotify\\src\\songs\\song.txt");
+                reValidateMiddlePage("C:\\Users\\LENOVO\\Desktop\\JPotify\\JPotify\\src\\songs\\song.bin");
                 middlePage.getSongsInLibrary().setVisible(true);
             }
             if(e.getSource()==album){
-                Songs.orderingSongs(SongbarGUI.getFilePath());
                 middlePage.getSongsInLibrary().setVisible(false);
               //  middlePage.getSongsInLibrary().revalidate();
+                // middlePage.getSongsInLibrary().removeAll();
+                Songs.orderingSongs(SongbarGUI.getFilePath());
+                try {
+                    middlePage.addAlbumsToLibraryPanel("C:\\Users\\LENOVO\\Desktop\\JPotify\\JPotify\\src\\songs\\Albums.bin");
+                } catch (InvalidDataException ex) {
+                    ex.printStackTrace();
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                } catch (UnsupportedTagException ex) {
+                    ex.printStackTrace();
+                }
+                middlePage.revalidate();
+
+                //Songs.orderingSongs(SongbarGUI.getFilePath());
                 middlePage.getAlbumsInLibrary().setVisible(true);
                 //reValidateMiddlePage("C:\\Users\\LENOVO\\Desktop\\JPotify\\JPotify\\src\\songs\\Albums.txt");
             }
             if(e.getSource() ==  addToLibrary ){
                 Songs song = new Songs();
                 boolean isNull = false;
-                ArrayList a = (ArrayList) song.reafFromFile("C:\\Users\\LENOVO\\Desktop\\JPotify\\JPotify\\src\\songs\\song.txt");
-               // ArrayList name = (ArrayList) song.reafFromFile("C:\\Users\\LENOVO\\Desktop\\JPotify\\JPotify\\src\\songs\\SongNames.txt");
+                ArrayList<Song> a = null;
+                try {
+                    a = song.reafSongsFromFile("C:\\Users\\LENOVO\\Desktop\\JPotify\\JPotify\\src\\songs\\song.bin");
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
+                // ArrayList name = (ArrayList) song.reafFromFile("C:\\Users\\LENOVO\\Desktop\\JPotify\\JPotify\\src\\songs\\SongNames.txt");
                 if(a==null){
                     a = new ArrayList();
                     isNull = true;
@@ -129,10 +159,14 @@ public void reValidateAlbums(){
                 } catch (UnsupportedTagException ex) {
                     ex.printStackTrace();
                 }
-                song.writeToFile(song.getSongArrays(),"C:\\Users\\LENOVO\\Desktop\\JPotify\\JPotify\\src\\songs\\song.txt");
+                song.writeSongsToFile(song.getSongArrays(),"C:\\Users\\LENOVO\\Desktop\\JPotify\\JPotify\\src\\songs\\song.bin");
                 //playList.writeToFile(name,"C:\\Users\\LENOVO\\Desktop\\JPotify\\JPotify\\src\\songs\\SongNames.txt");
-                SongbarGUI.setFilePath((ArrayList) song.reafFromFile("C:\\Users\\LENOVO\\Desktop\\JPotify\\JPotify\\src\\songs\\song.txt"));
-               // Albums.manageAlbum(songToAlbum);
+                try {
+                    SongbarGUI.setFilePath( song.reafSongsFromFile("C:\\Users\\LENOVO\\Desktop\\JPotify\\JPotify\\src\\songs\\song.bin"));
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
+                // Albums.manageAlbum(songToAlbum);
 
                 if(isNull) {
                     try {
@@ -145,7 +179,7 @@ public void reValidateAlbums(){
                         ex.printStackTrace();
                     }
                 }
-                reValidateMiddlePage("C:\\Users\\LENOVO\\Desktop\\JPotify\\JPotify\\src\\songs\\song.txt");
+                reValidateMiddlePage("C:\\Users\\LENOVO\\Desktop\\JPotify\\JPotify\\src\\songs\\song.bin");
 
 
                 //playList.reafFromFile("C:\\Users\\LENOVO\\Desktop\\JPotify\\JPotify\\src\\songs\\SongNames.txt");

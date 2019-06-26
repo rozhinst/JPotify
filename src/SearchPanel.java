@@ -1,6 +1,7 @@
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 import java.util.ArrayList;
 
 import javax.swing.*;
@@ -19,8 +20,8 @@ public class SearchPanel extends JPanel {
         //  this.model = model;
         createPartControl();
     }
-    public Song searchBySong(String name){
-        ArrayList<Song> songs = (ArrayList<Song>) Songs.reafFromFile("C:\\Users\\LENOVO\\Desktop\\JPotify\\JPotify\\src\\songs\\song.txt");
+    public Song searchBySong(String name) throws IOException {
+        ArrayList<Song> songs = (ArrayList<Song>) Songs.reafSongsFromFile("C:\\Users\\LENOVO\\Desktop\\JPotify\\JPotify\\src\\songs\\song.bin");
         for(int i=0;i<songs.size();i++){
             if(songs.get(i).getName().contains(name))
                 return songs.get(i);
@@ -58,8 +59,13 @@ public class SearchPanel extends JPanel {
             @Override
             public void actionPerformed(ActionEvent event) {
                 if(event.getSource() == findButton){
-                   Song song = searchBySong(findTextField.getText());
-                   if(song ==null) System.out.println("naaaaaaaaaa");
+                    Song song = null;
+                    try {
+                        song = searchBySong(findTextField.getText());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    if(song ==null) System.out.println("naaaaaaaaaa");
                     System.out.println(song.getName()+"  "+song.getPath());
 
                 }
