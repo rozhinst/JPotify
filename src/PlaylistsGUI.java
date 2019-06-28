@@ -29,7 +29,10 @@ public class PlaylistsGUI extends JPanel {
     private ArrayList<JButton> songButtons;
     private JTextArea details;
     private JButton addSong;
-    Handler handler;
+    private  int size2;
+    private  ArrayList songs;
+    private Handler handler;
+
 
 
     // private ArrayList <JButton> playlistsButtons;
@@ -41,29 +44,52 @@ public class PlaylistsGUI extends JPanel {
         PlaylistsGUI.middlePage = middlePage;
     }
 
+
     public PlaylistsGUI(PlayList playlist) throws InvalidDataException, IOException, UnsupportedTagException {
+        this.playlist = playlist;
+        handler = new Handler();
+
+       this.removeAll();
+//        this.revalidate();
+
+        if(!playlist.getName().equals("Favorite") && !playlist.getName().equals("Shared"))
+         setMiddlePageButtons(playlist);
+        else if(playlist.getName().equals("Shared")) setMiddleForShared();
+        else setMiddleForFavorite();
+
+
+
+    }
+    public void setMiddleForShared() throws IOException, InvalidDataException, UnsupportedTagException {
+        this.removeAll();
+        middlePage.revalidate();
         this.setLayout(new GridLayout(0, 4, 10, 10));
         this.setBackground(new Color(0, 0, 0, 0));
-        this.playlist = playlist;
-        int size = playlist.getPlayListSongs().size();
-        songButtons = new ArrayList<>(size);
-        for (int i = 0; i < size; i++) {
+
+        songs = Songs.reafSongsFromFile("src\\playlists\\Shared.bin");
+        if(songs==null) songs = new ArrayList();
+         size2 = songs.size();
+
+        songButtons = new ArrayList<>(size2);
+        for (int i = 0; i < size2; i++) {
             JButton button = new JButton();
             button.setLayout(new GridLayout(2, 1));
             songButtons.add(button);
         }
-        Handler handler = new Handler();
-        for (int i = 0; i < size; i++) {
+
+        for (int i = 0; i < size2; i++) {
             songButtons.get(i).addActionListener(handler);
         }
 
-        for (int i = 0; i < size; i++) {
+
+        for (int i = 0; i < size2; i++) {
             details = new JTextArea();
             details.setBackground(new Color(20, 20, 20));
             details.setForeground(Color.WHITE);
-            Song song = (Song) playlist.getPlayListSongs().get(i);
+            Song song = (Song) songs.get(i);
             id3 = new GetID3(song.getPath());
             Image newImage = id3.getImg().getScaledInstance(150, 150, Image.SCALE_SMOOTH);
+
             for (int j = 0; j < id3.getDetails().size() - 2; j++) {
 
                 details.append(id3.getDetails().get(j));
@@ -85,13 +111,152 @@ public class PlaylistsGUI extends JPanel {
         addSong.setPreferredSize(new Dimension(120, 200));
         addSong.setForeground(Color.WHITE);
         addSong.addActionListener(handler);
+        if(size2==0){
+            this.removeAll();
+            middlePage.removeAll();
+            middlePage.repaint();
+
+        }
         this.add(addSong);
-        if (middlePage.getAlbumsInLibrary() != null) middlePage.getAlbumsInLibrary().removeAll();
-        if (middlePage.getSongsInLibrary() != null) middlePage.getSongsInLibrary().removeAll();
-        if (middlePage.getSongsInAlbum() != null) middlePage.getSongsInAlbum().removeAll();
+        middlePage.getAlbumsInLibrary().removeAll();
+        middlePage.getSongsInLibrary().removeAll();
+        middlePage.getSongsInAlbum().removeAll();
         middlePage.add(this);
         middlePage.revalidate();
 
+
+
+    }
+
+    public void setMiddleForFavorite() throws IOException, InvalidDataException, UnsupportedTagException {
+        this.removeAll();
+        middlePage.revalidate();
+        this.setLayout(new GridLayout(0, 4, 10, 10));
+        this.setBackground(new Color(0, 0, 0, 0));
+
+         songs = Songs.reafSongsFromFile("src\\playlists\\Favorite.bin");
+         if(songs==null) songs = new ArrayList();
+          size2 = songs.size();
+         songButtons = new ArrayList<>(size2);
+
+        for (int i = 0; i < size2; i++) {
+            JButton button = new JButton();
+            button.setLayout(new GridLayout(2, 1));
+            songButtons.add(button);
+        }
+
+        for (int i = 0; i < size2; i++) {
+            songButtons.get(i).addActionListener(handler);
+        }
+
+
+        for (int i = 0; i < size2; i++) {
+            details = new JTextArea();
+            details.setBackground(new Color(20, 20, 20));
+            details.setForeground(Color.WHITE);
+            Song song = (Song) songs.get(i);
+            id3 = new GetID3(song.getPath());
+            Image newImage = id3.getImg().getScaledInstance(150, 150, Image.SCALE_SMOOTH);
+
+            for (int j = 0; j < id3.getDetails().size() - 2; j++) {
+
+                details.append(id3.getDetails().get(j));
+                details.append("\n");
+
+            }
+
+            JLabel artWork = new JLabel();
+            artWork.setIcon(new ImageIcon(newImage));
+            songButtons.get(i).add(artWork);
+            songButtons.get(i).add(details);
+
+            songButtons.get(i).setBackground(new Color(20, 20, 20));
+
+            this.add(songButtons.get(i));
+        }
+        addSong = new JButton("add new song");
+        addSong.setBackground(new Color(20, 20, 20));
+        addSong.setPreferredSize(new Dimension(120, 200));
+        addSong.setForeground(Color.WHITE);
+        addSong.addActionListener(handler);
+        if(size2==0){
+            this.removeAll();
+            middlePage.removeAll();
+            middlePage.repaint();
+
+        }
+        this.add(addSong);
+        middlePage.getAlbumsInLibrary().removeAll();
+        middlePage.getSongsInLibrary().removeAll();
+        middlePage.getSongsInAlbum().removeAll();
+        middlePage.add(this);
+        middlePage.revalidate();
+
+
+
+
+    }
+    public void setMiddlePageButtons(PlayList playlist) throws InvalidDataException, IOException, UnsupportedTagException {
+        this.removeAll();
+        middlePage.revalidate();
+        this.setLayout(new GridLayout(0, 4, 10, 10));
+        this.setBackground(new Color(0, 0, 0, 0));
+
+         size2 = playlist.getPlayListSongs().size();
+        songs = playlist.getPlayListSongs();
+        songButtons = new ArrayList<>(size2);
+        for (int i = 0; i < size2; i++) {
+            JButton button = new JButton();
+            button.setLayout(new GridLayout(2, 1));
+            songButtons.add(button);
+        }
+
+        for (int i = 0; i < size2; i++) {
+            songButtons.get(i).addActionListener(handler);
+        }
+
+
+        for (int i = 0; i < size2; i++) {
+            details = new JTextArea();
+            details.setBackground(new Color(20, 20, 20));
+            details.setForeground(Color.WHITE);
+            Song song = (Song) playlist.getPlayListSongs().get(i);
+            id3 = new GetID3(song.getPath());
+            Image newImage = id3.getImg().getScaledInstance(150, 150, Image.SCALE_SMOOTH);
+
+            for (int j = 0; j < id3.getDetails().size() - 2; j++) {
+
+                details.append(id3.getDetails().get(j));
+                details.append("\n");
+
+            }
+
+            JLabel artWork = new JLabel();
+            artWork.setIcon(new ImageIcon(newImage));
+            songButtons.get(i).add(artWork);
+            songButtons.get(i).add(details);
+
+            songButtons.get(i).setBackground(new Color(20, 20, 20));
+
+            this.add(songButtons.get(i));
+        }
+        addSong = new JButton("add new song");
+        addSong.setBackground(new Color(20, 20, 20));
+        addSong.setPreferredSize(new Dimension(120, 200));
+        addSong.setForeground(Color.WHITE);
+        addSong.addActionListener(handler);
+        if(size2==0){
+            this.removeAll();
+            middlePage.removeAll();
+            middlePage.repaint();
+
+        }
+        this.add(addSong);
+         middlePage.getAlbumsInLibrary().removeAll();
+         middlePage.getSongsInLibrary().removeAll();
+         middlePage.getSongsInAlbum().removeAll();
+        middlePage.add(this);
+        middlePage.revalidate();
     }
 
 
@@ -100,11 +265,26 @@ public class PlaylistsGUI extends JPanel {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            for (int i = 0; i < playlist.getPlayListSongs().size(); i++) {
-                if (e.getSource() == playlist.getPlayListSongs().get(i)) {
-                    SongbarGUI.setSongNum(i);
 
-                    SongbarGUI.nextOrPrev();
+            for (int i = 0; i < size2; i++) {
+                if (e.getSource() == songButtons.get(i)) {
+                    System.out.println("this is i"+i);
+                    ArrayList songs2 = new ArrayList();
+                    try {
+                        songs2 = Songs.reafSongsFromFile("src\\songs\\song.bin");
+                    } catch (IOException ex) {
+                        ex.printStackTrace();
+                    }
+
+                    for (int j = 0; j <songs2.size() ; j++) {
+                        if(((Song)(songs2.get(j))).getName().equals( ((Song)songs.get(i)).getName())){
+                            SongbarGUI.setSongNum(j);
+
+
+                            SongbarGUI.nextOrPrev();
+                            ((Song)songs2.get(j)).setTimePlayed();
+                        }
+                    }
 
                 }
             }
@@ -136,17 +316,85 @@ public class PlaylistsGUI extends JPanel {
                     songs.get(i).addActionListener(new ActionListener() {
                         @Override
                         public void actionPerformed(ActionEvent evt) {
-                            System.out.println(finalI+"****************************************");
-                            try {
+                            if (!playlist.getName().equals("Favorite") && !(playlist.getName().equals("Shared"))) {
+                                System.out.println(finalI + "****************************************");
+                                try {
 
-                                playlist.addSongs(finalI);
-                               ///////////////////////////////////////////////////////////////////////////////////////////////here!!////////////////////////////////////////////////////////////////////////
+                                    playlist.addSongs(finalI);
+
+                                    ArrayList playlists = Songs.reafPlayListFromFile("src\\playlists\\playlists.bin");
+                                    if (playlists == null) playlists = new ArrayList();
+                                    for (int j = 0; j < playlists.size(); j++) {
+                                        if (((PlayList) playlists.get(j)).getName().equals(playlist.getName())) {
+                                            playlists.set(j, playlist);
+                                            Songs.writeLibrariesToFile(playlists, "src\\playlists\\playlists.bin");
+                                            setMiddlePageButtons(playlist);
+                                            middlePage.repaint();
+                                            frame.setVisible(false);
+                                        }
+                                    }
 
 
-                            } catch (IOException ex) {
-                                ex.printStackTrace();
+                                } catch (IOException | InvalidDataException | UnsupportedTagException ex) {
+                                    ex.printStackTrace();
+                                }
+                            }
+                            else if(playlist.getName().equals("Shared")){
+                                try {
+                                  //  playlist.addSongs(finalI);
+                                    ArrayList songs;
+                                     songs = Songs.reafSongsFromFile("src\\playlists\\Shared.bin");
+                                    if(songs==null)  songs = new ArrayList();
+                                    ArrayList songsInLibrary = Songs.reafSongsFromFile("src\\songs\\song.bin");
+                                    for (int j = 0; j <songsInLibrary.size() ; j++) {
+                                        if(finalI==j){
+                                            songs.add(songsInLibrary.get(j));
+                                            Songs.writeSongsToFile(songs,"src\\playlists\\Shared.bin");
+                                           // setMiddlePageButtons(playlist);
+                                            setMiddleForShared();
+                                            middlePage.repaint();
+                                            frame.setVisible(false);
+                                        }
+                                    }
+
+                                } catch (IOException ex) {
+                                    ex.printStackTrace();
+                                } catch (InvalidDataException ex) {
+                                    ex.printStackTrace();
+                                } catch (UnsupportedTagException ex) {
+                                    ex.printStackTrace();
+                                }
+                            }
+                            else{
+                                try {
+                                    //  playlist.addSongs(finalI);
+
+                                    ArrayList songs;
+                                    songs = Songs.reafSongsFromFile("src\\playlists\\Favorite.bin");
+                                    if(songs==null)  songs = new ArrayList();
+                                    ArrayList songsInLibrary = Songs.reafSongsFromFile("src\\songs\\song.bin");
+                                    for (int j = 0; j <songsInLibrary.size() ; j++) {
+                                        if(finalI==j){
+                                            songs.add(songsInLibrary.get(j));
+                                            Songs.writeSongsToFile(songs,"src\\playlists\\Favorite.bin");
+                                            //setMiddlePageButtons(playlist);
+                                            setMiddleForFavorite();
+                                            frame.setVisible(false);
+                                        }
+                                    }
+
+                                } catch (IOException ex) {
+                                    ex.printStackTrace();
+                                } catch (InvalidDataException ex) {
+                                    ex.printStackTrace();
+                                } catch (UnsupportedTagException ex) {
+                                    ex.printStackTrace();
+                                }
+
                             }
                         }
+
+
 
                     });
                 }

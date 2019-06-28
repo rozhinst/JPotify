@@ -222,6 +222,7 @@ public class MiddlePage extends JPanel {
                         SongbarGUI.setSongNum(i);
 
                         SongbarGUI.nextOrPrev();
+                        ((Song)fileOfSongs.get(i)).setTimePlayed();
 
                     }
                 }
@@ -314,6 +315,7 @@ public class MiddlePage extends JPanel {
                        // System.out.println(fileOfSongs.);
                         SongbarGUI.setSongNum(i);
                         SongbarGUI.nextOrPrev();
+                        ((Song)(fileOfSongs.get(i))).setTimePlayed();
 
                     }
                 }

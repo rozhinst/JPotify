@@ -24,8 +24,8 @@ public class LibraryGUI extends JPanel {
 
     private MiddlePage middlePage;
     private JLabel label2;
-    private JButton favorite;
-    private JButton shared;
+    private PlayList favorite;
+    private PlayList shared;
     private JPanel playlists;
     private ArrayList<PlayList> addedPlaylists;
 
@@ -54,18 +54,28 @@ public class LibraryGUI extends JPanel {
         playlists.setLayout(new GridLayout(0,1));
         playlists.setMinimumSize(new Dimension(120,120));
 
-        favorite = new JButton("Favorite");
+        favorite = new PlayList("Favorite");
         favorite.addActionListener(handler);
         favorite.setBackground(new Color(20,20,20));
         favorite.setBorder(emptyBorder);
         favorite.setForeground(Color.WHITE);
-        shared = new JButton("Shared");
+      //  favorite.addActionListener(handler);
+        shared = new PlayList("Shared");
         shared.setBackground(new Color(20,20,20));
         shared.setBorder(emptyBorder);
         shared.setForeground(Color.WHITE);
-        shared.addActionListener(handler);
-        playlists.add(favorite);
-        playlists.add(shared);
+       shared.addActionListener(handler);
+        JButton favoriteButton = favorite;
+        favoriteButton.setText("Favorite");
+        favoriteButton.setForeground(Color.WHITE);
+      //  favoriteButton.addActionListener(handler);
+
+        JButton sharedButton = shared;
+        shared.setText("Shared");
+        sharedButton.setForeground(Color.WHITE);
+       // sharedButton.addActionListener(handler);
+        playlists.add(favoriteButton);
+        playlists.add(sharedButton);
 
         label2 = new JLabel(" Playlist");
         label2.setForeground(Color.GRAY);
@@ -240,10 +250,21 @@ public class LibraryGUI extends JPanel {
         public void actionPerformed(ActionEvent e) {
 
            if(e.getSource() instanceof PlayList){
+               System.out.println(((PlayList) e.getSource()).getName());
+               middlePage.removeAll();
+               middlePage.revalidate();
                System.out.println(((PlayList)e.getSource()).getName());
                try {
+
+
                    PlaylistsGUI.setMiddlePage(middlePage);
+
+
+
                    PlaylistsGUI playlistsGUI = new PlaylistsGUI(((PlayList)e.getSource()));
+                   middlePage.revalidate();
+
+
 
                } catch (InvalidDataException ex) {
                    ex.printStackTrace();
@@ -254,13 +275,17 @@ public class LibraryGUI extends JPanel {
                }
 
            }
+           /*
            if(e.getSource()==favorite){
+
                System.out.println("favorite");
             //   PlaylistsGUI playlistsGUI = new PlaylistsGUI(favorite);
            }
            if(e.getSource()==shared){
                System.out.println("shared");
            }
+
+            */
             if (e.getSource() == addToPlaylist) {
                 nameFrame = new JFrame("Add to playlist");
 
@@ -300,7 +325,20 @@ public class LibraryGUI extends JPanel {
                                 @Override
                                 public void actionPerformed(ActionEvent evt) {
                                     System.out.println(newOne.getName());
-                                   /////////////////////////////////////////////////////////////////////////////////
+                                    middlePage.removeAll();
+                                    middlePage.revalidate();
+                                    PlaylistsGUI.setMiddlePage(middlePage);
+
+                                    try {
+                                        PlaylistsGUI playlistsGUI = new PlaylistsGUI((PlayList) newOne);
+                                        middlePage.revalidate();
+                                    } catch (InvalidDataException ex) {
+                                        ex.printStackTrace();
+                                    } catch (IOException ex) {
+                                        ex.printStackTrace();
+                                    } catch (UnsupportedTagException ex) {
+                                        ex.printStackTrace();
+                                    }//////////////////////////////////////////////////////////////////////
                                 }
                             });
 
@@ -324,10 +362,8 @@ public class LibraryGUI extends JPanel {
 
             }
 
-
-
                 if (e.getSource() == song) {
-
+                    middlePage.removeAll();
 
                     //  middlePage.
                     // middlePage.getSongsInLibrary().revalidate();
@@ -337,22 +373,20 @@ public class LibraryGUI extends JPanel {
                     } catch (IOException ex) {
                         ex.printStackTrace();
                     }
-                    middlePage.getSongsInLibrary().removeAll();
+
                     reValidateMiddlePageForSongs("src\\songs\\song.bin");
+                    middlePage.add(middlePage.getSongsInLibrary());
                     middlePage.getSongsInLibrary().setVisible(true);
                 }
                 if (e.getSource() == album) {
+                    middlePage.removeAll();
+                    middlePage.repaint();
 
                     try {
                         Songs.orderingSongs();
                     } catch (IOException ex) {
                         ex.printStackTrace();
                     }
-                    middlePage.getSongsInLibrary().setVisible(false);
-                    //  middlePage.getSongsInLibrary().revalidate();
-                    // middlePage.getSongsInLibrary().removeAll();
-
-
                     try {
                         reValidateMiddlePageForAlbums("src\\songs\\Albums.bin");
                     } catch (InvalidDataException ex) {
@@ -362,11 +396,11 @@ public class LibraryGUI extends JPanel {
                     } catch (UnsupportedTagException ex) {
                         ex.printStackTrace();
                     }
+                   // middlePage.getAlbumsInLibrary().setVisible(true);
+                    middlePage.add(middlePage.getAlbumsInLibrary());
                     middlePage.getAlbumsInLibrary().setVisible(true);
+                    middlePage.revalidate();
 
-                    //Songs.orderingSongs(SongbarGUI.getFilePath());
-                    middlePage.getAlbumsInLibrary().setVisible(true);
-                    //reValidateMiddlePage("C:\\Users\\LENOVO\\Desktop\\JPotify\\JPotify\\src\\songs\\Albums.txt");
                 }
                 if (e.getSource() == addToLibrary) {
                     Songs song = new Songs();
@@ -416,9 +450,6 @@ public class LibraryGUI extends JPanel {
                         }
                     }
                     reValidateMiddlePageForSongs("src\\songs\\song.bin");
-
-
-                    //playList.reafFromFile("C:\\Users\\LENOVO\\Desktop\\JPotify\\JPotify\\src\\songs\\SongNames.txt");
 
                 }
 
