@@ -1,11 +1,12 @@
-package App;
+import javax.swing.*;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Collections;
 
-public class PlayList implements Serializable {
+public class PlayList extends JButton implements Serializable {
     private String name;
     private ArrayList<Song> playListSongs;
+    private String filePath;
 
     //private ArrayList<Songs> song;
     public PlayList(String name) {
@@ -15,18 +16,20 @@ public class PlayList implements Serializable {
     }
 
     public void rename(String name) {
+        if((!this.name.equals("Favorite")) && (!this.name.equals("Shared")))
         this.name = name;
     }
 
-    public void addSongs(int index) {
+    public void addSongs(int index) throws IOException {
         Songs song = new Songs();
-        ArrayList<Song> songs = (ArrayList<Song>) song.reafFromFile("C:\\Users\\LENOVO\\Desktop\\JPotify\\JPotify\\src\\App\\songs\\song.txt");
+        ArrayList<Song> songs = (ArrayList<Song>) song.reafSongsFromFile("src\\songs\\song.bin");
         playListSongs.add(songs.get(index));//iteration?
+
     }
 
 
-    public void removeSongs(int index) {
-        ArrayList<Song> songs = (ArrayList<Song>) Songs.reafFromFile("C:\\Users\\LENOVO\\Desktop\\JPotify\\JPotify\\src\\App\\songs\\song.txt");
+    public void removeSongs(int index) throws IOException {
+        ArrayList<Song> songs = (ArrayList<Song>) Songs.reafSongsFromFile("src\\songs\\song.bin");
         playListSongs.remove(songs.get(index));//iteration????
     }
 
@@ -43,7 +46,7 @@ public class PlayList implements Serializable {
     }
 }
 class Main2 {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         PlayList playList = new PlayList("rozhin");
         playList.addSongs(0);
         playList.addSongs(2);
