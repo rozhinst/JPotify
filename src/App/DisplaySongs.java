@@ -49,8 +49,11 @@ public class DisplaySongs {
         Iterator it = playLists.iterator();
         while(it.hasNext()){
             PlayList play = (PlayList) it.next();
-            if(play.equals(playList)){
-                playLists.remove(play);
+            if(play.getName().equals(playList.getName())){
+                System.out.println(play.getName()+"!!!!!!!!!!!!!!!!!!!!");
+               // playLists.remove(play);
+                it.remove();
+
             }
         }
         Songs.writeLibrariesToFile(playLists, "src\\playlists\\playlists.bin");

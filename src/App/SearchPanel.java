@@ -1,4 +1,3 @@
-package App;
 import com.mpatric.mp3agic.InvalidDataException;
 import com.mpatric.mp3agic.UnsupportedTagException;
 
@@ -25,7 +24,7 @@ public class SearchPanel extends JPanel {
         createPartControl();
     }
     public ArrayList<Song> searchBySong(String name) throws InvalidDataException, IOException, UnsupportedTagException {
-        ArrayList<Song> songs = (ArrayList<Song>) Songs.reafFromFile("C:\\Users\\LENOVO\\Desktop\\JPotify\\JPotify\\src\\App\\songs\\song.txt");
+        ArrayList<Song> songs = (ArrayList<Song>) Songs.reafSongsFromFile("src\\songs\\song.bin");
         ArrayList<Song> searched = new ArrayList<>();
         for(int i=0;i<songs.size();i++){
             GetID3 id3 = new GetID3(songs.get(i).getPath());
@@ -47,8 +46,8 @@ public class SearchPanel extends JPanel {
         this.setBackground(new Color(20,20,20));
         this.setBorder(BorderFactory.createEmptyBorder(6, 6, 6, 1000));
 
-       // JLabel findLabel = new JLabel();
-        searchIcon = new JLabel(new  ImageIcon(new ImageIcon("C:\\Users\\LENOVO\\Desktop\\JPotify\\JPotify\\src\\App\\icons\\search.png").getImage().getScaledInstance(17, 17, Image.SCALE_DEFAULT)));
+        // JLabel findLabel = new JLabel();
+        searchIcon = new JLabel(new  ImageIcon(new ImageIcon("src\\icons\\search.png").getImage().getScaledInstance(17, 17, Image.SCALE_DEFAULT)));
         // findLabel.setBackground(Color.GRAY);
 
         this.add(searchIcon);

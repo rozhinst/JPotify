@@ -49,11 +49,11 @@ public class PlaylistsGUI extends JPanel {
         this.playlist = playlist;
         handler = new Handler();
 
-       this.removeAll();
+        this.removeAll();
 //        this.revalidate();
 
         if(!playlist.getName().equals("Favorite") && !playlist.getName().equals("Shared"))
-         setMiddlePageButtons(playlist);
+            setMiddlePageButtons(playlist);
         else if(playlist.getName().equals("Shared")) setMiddleForShared();
         else setMiddleForFavorite();
 
@@ -68,8 +68,15 @@ public class PlaylistsGUI extends JPanel {
 
         songs = Songs.reafSongsFromFile("src\\playlists\\Shared.bin");
         if(songs==null) songs = new ArrayList();
-         size2 = songs.size();
+        size2 = songs.size();
 
+        finalSet(songs,size2);
+
+
+
+    }
+
+    public void finalSet(ArrayList songs,int size2) throws InvalidDataException, IOException, UnsupportedTagException {
         songButtons = new ArrayList<>(size2);
         for (int i = 0; i < size2; i++) {
             JButton button = new JButton();
@@ -124,9 +131,8 @@ public class PlaylistsGUI extends JPanel {
         middlePage.add(this);
         middlePage.revalidate();
 
-
-
     }
+
 
     public void setMiddleForFavorite() throws IOException, InvalidDataException, UnsupportedTagException {
         this.removeAll();
@@ -134,63 +140,10 @@ public class PlaylistsGUI extends JPanel {
         this.setLayout(new GridLayout(0, 4, 10, 10));
         this.setBackground(new Color(0, 0, 0, 0));
 
-         songs = Songs.reafSongsFromFile("src\\playlists\\Favorite.bin");
-         if(songs==null) songs = new ArrayList();
-          size2 = songs.size();
-         songButtons = new ArrayList<>(size2);
-
-        for (int i = 0; i < size2; i++) {
-            JButton button = new JButton();
-            button.setLayout(new GridLayout(2, 1));
-            songButtons.add(button);
-        }
-
-        for (int i = 0; i < size2; i++) {
-            songButtons.get(i).addActionListener(handler);
-        }
-
-
-        for (int i = 0; i < size2; i++) {
-            details = new JTextArea();
-            details.setBackground(new Color(20, 20, 20));
-            details.setForeground(Color.WHITE);
-            Song song = (Song) songs.get(i);
-            id3 = new GetID3(song.getPath());
-            Image newImage = id3.getImg().getScaledInstance(150, 150, Image.SCALE_SMOOTH);
-
-            for (int j = 0; j < id3.getDetails().size() - 2; j++) {
-
-                details.append(id3.getDetails().get(j));
-                details.append("\n");
-
-            }
-
-            JLabel artWork = new JLabel();
-            artWork.setIcon(new ImageIcon(newImage));
-            songButtons.get(i).add(artWork);
-            songButtons.get(i).add(details);
-
-            songButtons.get(i).setBackground(new Color(20, 20, 20));
-
-            this.add(songButtons.get(i));
-        }
-        addSong = new JButton("add new song");
-        addSong.setBackground(new Color(20, 20, 20));
-        addSong.setPreferredSize(new Dimension(120, 200));
-        addSong.setForeground(Color.WHITE);
-        addSong.addActionListener(handler);
-        if(size2==0){
-            this.removeAll();
-            middlePage.removeAll();
-            middlePage.repaint();
-
-        }
-        this.add(addSong);
-        middlePage.getAlbumsInLibrary().removeAll();
-        middlePage.getSongsInLibrary().removeAll();
-        middlePage.getSongsInAlbum().removeAll();
-        middlePage.add(this);
-        middlePage.revalidate();
+        songs = Songs.reafSongsFromFile("src\\playlists\\Favorite.bin");
+        if(songs==null) songs = new ArrayList();
+        size2 = songs.size();
+        finalSet(songs,size2);
 
 
 
@@ -202,61 +155,16 @@ public class PlaylistsGUI extends JPanel {
         this.setLayout(new GridLayout(0, 4, 10, 10));
         this.setBackground(new Color(0, 0, 0, 0));
 
-         size2 = playlist.getPlayListSongs().size();
-        songs = playlist.getPlayListSongs();
-        songButtons = new ArrayList<>(size2);
-        for (int i = 0; i < size2; i++) {
-            JButton button = new JButton();
-            button.setLayout(new GridLayout(2, 1));
-            songButtons.add(button);
-        }
-
-        for (int i = 0; i < size2; i++) {
-            songButtons.get(i).addActionListener(handler);
-        }
-
-
-        for (int i = 0; i < size2; i++) {
-            details = new JTextArea();
-            details.setBackground(new Color(20, 20, 20));
-            details.setForeground(Color.WHITE);
-            Song song = (Song) playlist.getPlayListSongs().get(i);
-            id3 = new GetID3(song.getPath());
-            Image newImage = id3.getImg().getScaledInstance(150, 150, Image.SCALE_SMOOTH);
-
-            for (int j = 0; j < id3.getDetails().size() - 2; j++) {
-
-                details.append(id3.getDetails().get(j));
-                details.append("\n");
-
+        ArrayList playlists1 = Songs.reafPlayListFromFile("src\\playlists\\playlists.bin");
+        for (int i = 0; i <playlists1.size() ; i++) {
+            if(((PlayList)playlists1.get(i)).getName().equals(playlist.getName())){
+                songs = ((PlayList)playlists1.get(i)).getPlayListSongs();
+                size2 = songs.size();
             }
-
-            JLabel artWork = new JLabel();
-            artWork.setIcon(new ImageIcon(newImage));
-            songButtons.get(i).add(artWork);
-            songButtons.get(i).add(details);
-
-            songButtons.get(i).setBackground(new Color(20, 20, 20));
-
-            this.add(songButtons.get(i));
         }
-        addSong = new JButton("add new song");
-        addSong.setBackground(new Color(20, 20, 20));
-        addSong.setPreferredSize(new Dimension(120, 200));
-        addSong.setForeground(Color.WHITE);
-        addSong.addActionListener(handler);
-        if(size2==0){
-            this.removeAll();
-            middlePage.removeAll();
-            middlePage.repaint();
 
-        }
-        this.add(addSong);
-         middlePage.getAlbumsInLibrary().removeAll();
-         middlePage.getSongsInLibrary().removeAll();
-         middlePage.getSongsInAlbum().removeAll();
-        middlePage.add(this);
-        middlePage.revalidate();
+       finalSet(songs,size2);
+
     }
 
 
@@ -309,10 +217,11 @@ public class PlaylistsGUI extends JPanel {
                     button.setLayout(new GridLayout(2, 1));
                     songs.add(button);
                 }
-             //   Handler2 handler2 = new Handler2();
+                //   Handler2 handler2 = new Handler2();
 
                 for (int i = 0; i < songs.size(); i++) {
                     int finalI = i;
+                    ArrayList finalFileOfSongs = fileOfSongs;
                     songs.get(i).addActionListener(new ActionListener() {
                         @Override
                         public void actionPerformed(ActionEvent evt) {
@@ -320,13 +229,18 @@ public class PlaylistsGUI extends JPanel {
                                 System.out.println(finalI + "****************************************");
                                 try {
 
-                                    playlist.addSongs(finalI);
+                                  //  playlist.addSongs(finalI);
 
                                     ArrayList playlists = Songs.reafPlayListFromFile("src\\playlists\\playlists.bin");
                                     if (playlists == null) playlists = new ArrayList();
                                     for (int j = 0; j < playlists.size(); j++) {
                                         if (((PlayList) playlists.get(j)).getName().equals(playlist.getName())) {
-                                            playlists.set(j, playlist);
+                                            System.out.println(((PlayList) playlists.get(j)).getName()+"*****");
+                                           // playlists.set(j, playlist);
+                                            ArrayList songs = ((PlayList) playlists.get(j)).getPlayListSongs();
+                                            songs.add(finalFileOfSongs.get(finalI));
+                                            ((PlayList) playlists.get(j)).setPlayListSongs(songs);
+                                            playlists.set(j,((PlayList) playlists.get(j)));
                                             Songs.writeLibrariesToFile(playlists, "src\\playlists\\playlists.bin");
                                             setMiddlePageButtons(playlist);
                                             middlePage.repaint();
@@ -341,16 +255,16 @@ public class PlaylistsGUI extends JPanel {
                             }
                             else if(playlist.getName().equals("Shared")){
                                 try {
-                                  //  playlist.addSongs(finalI);
+                                    //  playlist.addSongs(finalI);
                                     ArrayList songs;
-                                     songs = Songs.reafSongsFromFile("src\\playlists\\Shared.bin");
+                                    songs = Songs.reafSongsFromFile("src\\playlists\\Shared.bin");
                                     if(songs==null)  songs = new ArrayList();
                                     ArrayList songsInLibrary = Songs.reafSongsFromFile("src\\songs\\song.bin");
                                     for (int j = 0; j <songsInLibrary.size() ; j++) {
                                         if(finalI==j){
                                             songs.add(songsInLibrary.get(j));
                                             Songs.writeSongsToFile(songs,"src\\playlists\\Shared.bin");
-                                           // setMiddlePageButtons(playlist);
+                                            // setMiddlePageButtons(playlist);
                                             setMiddleForShared();
                                             middlePage.repaint();
                                             frame.setVisible(false);
@@ -428,7 +342,7 @@ public class PlaylistsGUI extends JPanel {
 
                     songs.get(i).setBackground(new Color(20, 20, 20));
 
-                  panel.add(songs.get(i));
+                    panel.add(songs.get(i));
                 }
                 frame.add(panel);
                 frame.setVisible(true);

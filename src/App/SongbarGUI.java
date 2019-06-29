@@ -1,5 +1,3 @@
-package App;
-import Network.Client;
 import com.mpatric.mp3agic.InvalidDataException;
 import com.mpatric.mp3agic.UnsupportedTagException;
 
@@ -14,7 +12,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.ArrayList;
 import static java.awt.BorderLayout.*;
 
@@ -35,6 +32,7 @@ public class SongbarGUI extends JPanel {
     private ImageIcon previousIcon;
     private ImageIcon refreshIcon;
     private ImageIcon favoriteOff;
+    private ImageIcon replayOff;
 
 
     private static JSlider bar;
@@ -51,6 +49,7 @@ public class SongbarGUI extends JPanel {
     private static GetID3 id3;
     private static int isShuffled;
     private int isFavorite;
+    private int isReplayed;
 
     private static String temp = "";
     private String path;
@@ -66,7 +65,6 @@ public class SongbarGUI extends JPanel {
     private JPanel barPanel;
     private static Thread t;
     static Timer timer;
-    private static Song currentSong;
     public SongbarGUI() throws IOException, InvalidDataException, UnsupportedTagException {
         super();
         //creating an empty border
@@ -76,18 +74,18 @@ public class SongbarGUI extends JPanel {
         songBar.setLayout(new BorderLayout());
 
         //Icons of playBottons
-        playIcon = new ImageIcon(new ImageIcon("C:\\Users\\LENOVO\\Desktop\\JPotify\\JPotify\\src\\App\\icons\\play.png").getImage().getScaledInstance(25, 25, Image.SCALE_DEFAULT));
-        pauseIcon = new ImageIcon(new ImageIcon("C:\\Users\\LENOVO\\Desktop\\JPotify\\JPotify\\src\\App\\icons\\pause-512.png").getImage().getScaledInstance(25, 25, Image.SCALE_DEFAULT));
-        nextIcon = new ImageIcon(new ImageIcon("C:\\Users\\LENOVO\\Desktop\\JPotify\\JPotify\\src\\App\\icons\\next.png").getImage().getScaledInstance(20, 20, Image.SCALE_DEFAULT));
-        previousIcon = new ImageIcon(new ImageIcon("C:\\Users\\LENOVO\\Desktop\\JPotify\\JPotify\\src\\App\\icons\\previous.png").getImage().getScaledInstance(20, 20, Image.SCALE_DEFAULT));
-        shuffleIcon = new ImageIcon(new ImageIcon("C:\\Users\\LENOVO\\Desktop\\JPotify\\JPotify\\src\\App\\icons\\Shuffle-2-icon.png").getImage().getScaledInstance(20, 20, Image.SCALE_DEFAULT));
-        shuffleOff = new ImageIcon(new ImageIcon("C:\\Users\\LENOVO\\Desktop\\JPotify\\JPotify\\src\\App\\icons\\shuffleOff.png").getImage().getScaledInstance(20, 20, Image.SCALE_DEFAULT));
+        playIcon = new ImageIcon(new ImageIcon("src\\icons\\play.png").getImage().getScaledInstance(25, 25, Image.SCALE_DEFAULT));
+        pauseIcon = new ImageIcon(new ImageIcon("src\\icons\\pause-512.png").getImage().getScaledInstance(25, 25, Image.SCALE_DEFAULT));
+        nextIcon = new ImageIcon(new ImageIcon("src\\icons\\next.png").getImage().getScaledInstance(20, 20, Image.SCALE_DEFAULT));
+        previousIcon = new ImageIcon(new ImageIcon("src\\icons\\previous.png").getImage().getScaledInstance(20, 20, Image.SCALE_DEFAULT));
+        shuffleIcon = new ImageIcon(new ImageIcon("src\\icons\\Shuffle-2-icon.png").getImage().getScaledInstance(20, 20, Image.SCALE_DEFAULT));
+        shuffleOff = new ImageIcon(new ImageIcon("src\\icons\\shuffleOff.png").getImage().getScaledInstance(20, 20, Image.SCALE_DEFAULT));
 
-        favoriteIcon = new ImageIcon(new ImageIcon("C:\\Users\\LENOVO\\Desktop\\JPotify\\JPotify\\src\\App\\icons\\filledFavorite.png").getImage().getScaledInstance(25, 25, Image.SCALE_DEFAULT));
-        favoriteOff =  new ImageIcon(new ImageIcon("C:\\Users\\LENOVO\\Desktop\\JPotify\\JPotify\\src\\App\\icons\\unfilledFavorite.png").getImage().getScaledInstance(25, 25, Image.SCALE_DEFAULT));
+        favoriteIcon = new ImageIcon(new ImageIcon("src\\icons\\filledFavorite.png").getImage().getScaledInstance(25, 25, Image.SCALE_DEFAULT));
+        favoriteOff =  new ImageIcon(new ImageIcon("src\\icons\\unfilledFavorite.png").getImage().getScaledInstance(25, 25, Image.SCALE_DEFAULT));
 
-        refreshIcon = new ImageIcon(new ImageIcon("C:\\Users\\LENOVO\\Desktop\\JPotify\\JPotify\\src\\App\\icons\\refresh.png").getImage().getScaledInstance(20, 20, Image.SCALE_DEFAULT));
-
+        refreshIcon = new ImageIcon(new ImageIcon("src\\icons\\refresh.png").getImage().getScaledInstance(20, 20, Image.SCALE_DEFAULT));
+        replayOff = new ImageIcon(new ImageIcon("src\\icons\\replayOff.png").getImage().getScaledInstance(20, 20, Image.SCALE_DEFAULT));
 
 
         setBackground(new Color(20,20,20));
@@ -123,6 +121,7 @@ public class SongbarGUI extends JPanel {
         timer = new Timer(1000, new Slider() );
         isShuffled = 0;
         isFavorite = 0;
+        isReplayed = 0;
 
 
         pause.setIcon(playIcon);
@@ -156,7 +155,7 @@ public class SongbarGUI extends JPanel {
         prev.setToolTipText("Previous Song");
         prev.setFocusable(false);
 
-        refresh.setIcon(refreshIcon);
+        refresh.setIcon(replayOff);
         refresh.setBorder(emptyBorder);
         refresh.setBackground(new Color(20,20,20));
         refresh.setToolTipText("Replay the Song");
@@ -223,13 +222,14 @@ public class SongbarGUI extends JPanel {
         next.addActionListener(handler);
         prev.addActionListener(handler);
         shuffle.addActionListener(handler);
+        refresh.addActionListener(handler);
         SkipMusic skip = new SkipMusic();
         sliderHandler = new SliderHandler();
         volume.addChangeListener(sliderHandler);
         bar.addChangeListener(sliderHandler);
         bar.addMouseListener(skip);
 
-        filePath = (ArrayList) songs.reafFromFile("C:\\Users\\LENOVO\\Desktop\\JPotify\\JPotify\\src\\App\\songs\\song.txt");
+        filePath = songs.reafSongsFromFile("src\\songs\\song.bin");
         if(filePath == null) filePath = new ArrayList();
         newSong();
     }
@@ -238,7 +238,6 @@ public class SongbarGUI extends JPanel {
     }
     public static ArrayList<Song> getFilePath(){return filePath;}
     public static void renewThread(){ t = new Thread(mp3);}
-    public static Song getCurrentSong(){return currentSong;}
     public static MP3 getMp3(){return mp3;}
     public static void setSongNum(int i){songNum = i;}
     public static void newSong() throws InvalidDataException, IOException, UnsupportedTagException {
@@ -315,10 +314,6 @@ public class SongbarGUI extends JPanel {
         Song song =(Song) filePath.get(songNum);
         song.setTimePlayed();
         filePath.set(songNum,song);
-        currentSong = (Song)filePath.get(songNum);
-        MainFrame.client.sendGroupCht(currentSong.getName());
-//        MainFrame.getWriter().println(2);
-//        MainFrame.getWriter().println(currentSong.getName());
     }
 
     public class Handler implements ActionListener {
@@ -347,13 +342,6 @@ public class SongbarGUI extends JPanel {
                     System.out.println(timer.isRunning());
                     pause.setIcon(playIcon);
                 }
-                currentSong = (Song) filePath.get(songNum);
-                MainFrame.client.sendGroupCht(currentSong.getName());
-//                Client.setCommandNumber(2);
-//                System.out.println("command sent");
-               // MainFrame.getWriter().println("2");
-               // System.out.println("ferestad");
-              //  MainFrame.getWriter().println(currentSong.getName());
             }
             if(e.getSource() == next) {
                 System.out.println("pressed prev  "+ filePath.size()+"  hddhfl   "+songNum);
@@ -394,6 +382,18 @@ public class SongbarGUI extends JPanel {
                     shuffle.setIcon(shuffleOff);
                 }
             }
+            if(e.getSource() == refresh){
+                isReplayed++;
+                System.out.println("refresh is pressed");
+                if(isReplayed%2 == 1){
+                    refresh.setIcon(refreshIcon);
+                    /////
+                }
+                else{
+                    refresh.setIcon(replayOff);
+                }
+            }
+
 
 
         }
@@ -404,10 +404,21 @@ public class SongbarGUI extends JPanel {
             bar.setValue(sliderValue);
             sliderValue++;
             if(sliderValue == bar.getMaximum()) {
-                songNum++;
-                if(songNum<filePath.size()) {
-                    nextOrPrev();
+                if(isReplayed%2!=1) {
+                    songNum++;
+                    if (songNum < filePath.size()) {
+                        nextOrPrev();
 
+                    }
+                }
+                else{
+                    sliderValue = 0;
+                    //mp3.playMusic(t);
+                    mp3.playLocation(0);
+                    timer.restart();
+                    t = new Thread(mp3);
+                    mp3.playMusic(t);
+                    pause.setIcon(pauseIcon);
                 }
 
             }

@@ -42,7 +42,7 @@ public class MainFrame extends JFrame {
         middlePage.setBorder(emptyBorder);
         friendsActivity = new FriendsActivityGUI();
         friendsActivity.setBorder(emptyBorder);
-        library.setPreferredSize(new Dimension(120,80));
+        library.setPreferredSize(new Dimension(170,500));
         this.add(new JScrollPane(library),BorderLayout.WEST);
        // this.add(new JScrollPane(playList),BorderLayout.WEST);
         this.add(new JScrollPane(songbar),BorderLayout.PAGE_END);

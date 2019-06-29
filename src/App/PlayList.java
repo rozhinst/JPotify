@@ -25,8 +25,11 @@ public class PlayList extends JButton implements Serializable {
         ArrayList<Song> songs = (ArrayList<Song>) song.reafSongsFromFile("src\\songs\\song.bin");
         playListSongs.add(songs.get(index));//iteration?
 
-    }
 
+    }
+public void setPlayListSongs(ArrayList<Song> newSongs){
+        this.playListSongs = newSongs;
+}
 
     public void removeSongs(int index) throws IOException {
         ArrayList<Song> songs = (ArrayList<Song>) Songs.reafSongsFromFile("src\\songs\\song.bin");

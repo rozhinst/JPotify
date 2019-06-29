@@ -15,14 +15,21 @@ public class LibraryGUI extends JPanel {
     private ImageIcon newPlaylistIcon;
     private ImageIcon songIcon;
     private ImageIcon albumIcon;
+    private ImageIcon removeIcon;
+    private ImageIcon renameIcon;
     private JButton song;
     private JButton album;
+    private ArrayList<JButton>  removePlaylist;
+    private ArrayList<JButton>  renamePlaylist;
     private JButton addToLibrary;
     // private JFrame playListName;
+    private JButton favoriteButton;
+    private JButton sharedButton;
     private JFrame nameFrame;
     private JTextArea getName;
 
     private MiddlePage middlePage;
+    private Handler hanler2;
     private JLabel label2;
     private PlayList favorite;
     private PlayList shared;
@@ -38,7 +45,7 @@ public class LibraryGUI extends JPanel {
     private DisplaySongs display;
     private final JScrollPane scroll;
 
-    public LibraryGUI() {
+    public LibraryGUI() throws IOException {
         super();
         Handler handler = new Handler();
         // playlist = new PlaylistsGUI();
@@ -46,6 +53,7 @@ public class LibraryGUI extends JPanel {
         // playlist.setMiddlePage(this.middlePage);
         this.setLayout(new GridLayout(0, 1));
         Border emptyBorder = BorderFactory.createEmptyBorder();
+       // this.setPreferredSize(new Dimension(200,500));
 
 
         display = new DisplaySongs();
@@ -53,6 +61,19 @@ public class LibraryGUI extends JPanel {
         playlists.setBackground(new Color(20,20,20));
         playlists.setLayout(new GridLayout(0,1));
         playlists.setMinimumSize(new Dimension(120,120));
+        renameIcon = new ImageIcon(new ImageIcon("src\\icons\\rename.png").getImage().getScaledInstance(20, 20, Image.SCALE_DEFAULT));
+
+        removeIcon = new ImageIcon(new ImageIcon("src\\icons\\remove.png").getImage().getScaledInstance(20, 20, Image.SCALE_DEFAULT));
+        /*
+        removePlaylist = new JButton();
+        removePlaylist.setBackground(new Color(20,20,20));
+        removePlaylist.setBorder(emptyBorder);
+        removePlaylist.setToolTipText("Remove playlist");
+        removePlaylist.setIcon(removeIcon);
+
+         */
+
+
 
         favorite = new PlayList("Favorite");
         favorite.addActionListener(handler);
@@ -65,17 +86,16 @@ public class LibraryGUI extends JPanel {
         shared.setBorder(emptyBorder);
         shared.setForeground(Color.WHITE);
        shared.addActionListener(handler);
-        JButton favoriteButton = favorite;
+         favoriteButton = favorite;
         favoriteButton.setText("Favorite");
         favoriteButton.setForeground(Color.WHITE);
       //  favoriteButton.addActionListener(handler);
 
-        JButton sharedButton = shared;
+         sharedButton = shared;
         shared.setText("Shared");
         sharedButton.setForeground(Color.WHITE);
        // sharedButton.addActionListener(handler);
-        playlists.add(favoriteButton);
-        playlists.add(sharedButton);
+
 
         label2 = new JLabel(" Playlist");
         label2.setForeground(Color.GRAY);
@@ -83,6 +103,7 @@ public class LibraryGUI extends JPanel {
         label2.setFont(label2.getFont().deriveFont(Font.BOLD, 14f));
         label2.setMaximumSize(new Dimension(120,60));
         //   this.setBackground(new Color(20,20,20));
+        /*
         ArrayList temp = new ArrayList();
         try {
              temp = Songs.reafPlayListFromFile("src\\playlists\\playlists.bin");
@@ -92,26 +113,25 @@ public class LibraryGUI extends JPanel {
         if(temp==null)  addedPlaylists = new ArrayList<>();
         else addedPlaylists = temp;
 
-        for (int i = 0; i <addedPlaylists.size() ; i++) {
-            JButton button =addedPlaylists.get(i);
-            button.setText(addedPlaylists.get(i).getName());
-            button.setBackground(new Color(20,20,20));
-            button.setForeground(Color.WHITE);
-            button.setBorder(BorderFactory.createEmptyBorder());
-            button.addActionListener(handler);
 
-            playlists.add(button);
+         */
 
 
-        }
-        playlists.revalidate();
+
+        setPlaylistButtons();
+
+//        for (int i = 0; i <removePlaylist.size() ; i++) {
+//            removePlaylist.get(i).addActionListener(handler);
+//        }
+        playlists.repaint();
+
 
 
         libraryIcon = new ImageIcon(new ImageIcon("src\\icons\\library.png").getImage().getScaledInstance(20, 20, Image.SCALE_DEFAULT));
         songIcon = new ImageIcon(new ImageIcon("src\\icons\\song.png").getImage().getScaledInstance(20, 20, Image.SCALE_DEFAULT));
         albumIcon = new ImageIcon(new ImageIcon("src\\icons\\album.png").getImage().getScaledInstance(20, 20, Image.SCALE_DEFAULT));
         newPlaylistIcon = new ImageIcon(new ImageIcon("src\\icons\\playList.png").getImage().getScaledInstance(25, 25, Image.SCALE_DEFAULT));
-        lineIcon = new ImageIcon(new ImageIcon("src\\icons\\line.png").getImage().getScaledInstance(120, 5, Image.SCALE_DEFAULT));
+        lineIcon = new ImageIcon(new ImageIcon("src\\icons\\line.png").getImage().getScaledInstance(170, 5, Image.SCALE_DEFAULT));
 
         this.setBackground(new Color(20, 20, 20));
         //this.setBackground(new Color(150,0,205));
@@ -179,7 +199,8 @@ public class LibraryGUI extends JPanel {
                 JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
                 JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
          scroll.setBackground(Color.GRAY);
-         scroll.setPreferredSize(new Dimension(100,200));
+         scroll.setPreferredSize(new Dimension(130,140));
+
 
 
         addToPlaylist.setBorder((BorderFactory.createLineBorder(Color.WHITE)));
@@ -213,7 +234,99 @@ public class LibraryGUI extends JPanel {
         addToLibrary.addActionListener(handler);
         album.addActionListener(handler);
 
+
     }
+
+    public void setPlaylistButtons() throws IOException {
+        playlists.removeAll();
+        playlists.add(favoriteButton);
+        playlists.add(sharedButton);
+
+        addedPlaylists = Songs.reafPlayListFromFile("src\\playlists\\playlists.bin");
+        if(addedPlaylists==null) addedPlaylists = new ArrayList<>();
+
+        removePlaylist = new ArrayList<>();
+        renamePlaylist = new ArrayList<>();
+        hanler2 = new Handler();
+
+        for (int i = 0; i <addedPlaylists.size() ; i++) {
+            JButton button1 = new JButton();
+            button1.setIcon(removeIcon);
+            button1.setBorder(BorderFactory.createEmptyBorder());
+            button1.setBackground(new Color(20,20,20));
+            button1.setToolTipText("Delete playlist");
+
+
+
+           // button1.addActionListener(handler);
+
+            removePlaylist.add(button1);
+
+        }
+        for (int i = 0; i <addedPlaylists.size() ; i++) {
+            JButton button1 = new JButton();
+            button1.setIcon(renameIcon);
+            button1.setBorder(BorderFactory.createEmptyBorder());
+            button1.setBackground(new Color(20,20,20));
+            button1.setToolTipText("Rename playlist");
+
+
+
+            // button1.addActionListener(handler);
+
+            renamePlaylist.add(button1);
+        }
+
+        for (int i = 0; i < removePlaylist.size(); i++) {
+            removePlaylist.get(i).addActionListener(hanler2);
+           // renamePlaylist.get(i).addActionListener(hanler2);
+        }
+        for (int i = 0; i < renamePlaylist.size(); i++) {
+            renamePlaylist.get(i).addActionListener(hanler2);
+            // renamePlaylist.get(i).addActionListener(hanler2);
+        }
+        for (int i = 0; i <addedPlaylists.size() ; i++) {
+            PlayList playList = new PlayList(addedPlaylists.get(i).getName());
+           // playList.setText(addedPlaylists.get(i).getName());
+            JLabel label = new JLabel(addedPlaylists.get(i).getName(),SwingConstants.CENTER);
+            label.setForeground(Color.WHITE);
+
+            playList.setBackground(new Color(20,20,20));
+            playList.setForeground(Color.WHITE);
+            playList.setBorder(BorderFactory.createEmptyBorder());
+            // button.add(removePlaylist);
+
+           // button.addActionListener(handler);
+           // addedPlaylists.add(button);
+            playlists.add(playList);
+            //addedPlaylists.set(i,button);
+          //  playList.addActionListener(handler);
+            playList.setLayout(new GridLayout());
+            playList.addActionListener(hanler2);
+          //  addedPlaylists.set(i,playList) ;
+            playList.add(removePlaylist.get(i));
+            playList.add(label);
+            playList.add(renamePlaylist.get(i));
+
+
+        }
+
+        /*
+        for (int i = 0; i <addedPlaylists.size() ; i++) {
+            ((PlayList) addedPlaylists.get(i)).addActionListener(handler);
+        }
+
+         */
+
+
+
+
+
+        playlists.revalidate();
+
+    }
+
+
 
     public void setMiddlePage(MiddlePage middlePage) {
         this.middlePage = middlePage;
@@ -248,6 +361,80 @@ public class LibraryGUI extends JPanel {
 
         @Override
         public void actionPerformed(ActionEvent e) {
+
+            for (int i = 0; i <removePlaylist.size() ; i++) {
+                if(e.getSource()==removePlaylist.get(i)){
+                    System.out.println(i);
+
+                    try {
+                        System.out.println(addedPlaylists.get(i).getName()+"pressed");
+                       PlayList playList = addedPlaylists.get(i);
+
+                        display.removePlaylist(playList);
+                        setPlaylistButtons();
+
+                        repaint();
+                        playlists.repaint();
+                        playlists.revalidate();
+                    } catch (IOException ex) {
+                        ex.printStackTrace();
+                    }
+
+                    
+                   // setPlaylistButtons();
+
+
+
+                }
+            }
+
+            for (int i = 0; i < renamePlaylist.size(); i++) {
+                if(e.getSource()==renamePlaylist.get(i)){
+                    PlayList playList = addedPlaylists.get(i);
+                    nameFrame = new JFrame("Rename playlist");
+                    nameFrame.setVisible(true);
+                    nameFrame.setSize(300, 200);
+                    nameFrame.setBackground(new Color(20, 20, 20));
+                    JLabel label = new JLabel("Please choose a name for playlist");
+                    label.setFont(label.getFont().deriveFont(Font.BOLD, 14f));
+
+                    label.setBackground(Color.lightGray);
+                    JPanel jPanel = new JPanel();
+                    jPanel.setLayout(new BorderLayout());
+                    JButton renameButton = new JButton("rename");
+
+                    renameButton.setBackground(Color.gray);
+                    jPanel.setBackground(Color.lightGray);
+                    jPanel.add(renameButton, BorderLayout.SOUTH);
+                    jPanel.add(label, BorderLayout.NORTH);
+                    nameFrame.add(jPanel);
+                    // playListName.add(add);
+                    // playlist.add(jPanel);
+                    getName = new JTextArea();
+                    getName.setBackground(Color.LIGHT_GRAY);
+
+                    jPanel.add(getName, BorderLayout.CENTER);
+                    int finalI = i;
+                    renameButton.addActionListener(new ActionListener() {
+                        @Override
+                        public void actionPerformed(ActionEvent evt) {
+                            // Rename playlist
+                            String newName = getName.getText();
+                            addedPlaylists.get(finalI).rename(newName);
+                            Songs.writeLibrariesToFile(addedPlaylists,"src\\playlists\\playlists.bin");
+                            try {
+                                setPlaylistButtons();
+                                playlists.repaint();
+                                nameFrame.setVisible(false);
+                            } catch (IOException ex) {
+                                ex.printStackTrace();
+                            }
+
+                        }
+                    });
+
+                }
+            }
 
            if(e.getSource() instanceof PlayList){
                System.out.println(((PlayList) e.getSource()).getName());
@@ -316,11 +503,20 @@ public class LibraryGUI extends JPanel {
                         String name = getName.getText();
                         try {
                             PlayList newOne =  display.creatPlayList(name);
+                            /*
                             newOne.setBackground(new Color(20,20,20));
                             newOne.setForeground(Color.WHITE);
                             newOne.setText(name);
+
+                             */
+
+                            //addedPlaylists.add(newOne);
+
+                            setPlaylistButtons();
+
+                            playlists.repaint();
                             System.out.println(newOne.getName());
-                            newOne.setBorder(BorderFactory.createEmptyBorder());
+                          //  newOne.setBorder(BorderFactory.createEmptyBorder());
                             newOne.addActionListener(new ActionListener() {
                                 @Override
                                 public void actionPerformed(ActionEvent evt) {
@@ -342,7 +538,7 @@ public class LibraryGUI extends JPanel {
                                 }
                             });
 
-                            playlists.add(newOne);
+                          //  playlists.add(newOne);
                             playlists.revalidate();
                             nameFrame.setVisible(false);
                         } catch (IOException ex) {
