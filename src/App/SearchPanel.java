@@ -1,3 +1,7 @@
+package App;
+import com.mpatric.mp3agic.InvalidDataException;
+import com.mpatric.mp3agic.UnsupportedTagException;
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -20,13 +24,18 @@ public class SearchPanel extends JPanel {
         //  this.model = model;
         createPartControl();
     }
-    public Song searchBySong(String name) throws IOException {
-        ArrayList<Song> songs = (ArrayList<Song>) Songs.reafSongsFromFile("C:\\Users\\LENOVO\\Desktop\\JPotify\\JPotify\\src\\songs\\song.bin");
+    public ArrayList<Song> searchBySong(String name) throws InvalidDataException, IOException, UnsupportedTagException {
+        ArrayList<Song> songs = (ArrayList<Song>) Songs.reafFromFile("C:\\Users\\LENOVO\\Desktop\\JPotify\\JPotify\\src\\App\\songs\\song.txt");
+        ArrayList<Song> searched = new ArrayList<>();
         for(int i=0;i<songs.size();i++){
-            if(songs.get(i).getName().contains(name))
-                return songs.get(i);
+            GetID3 id3 = new GetID3(songs.get(i).getPath());
+            for(int j=0;j<id3.getDetails().size();j++){
+                if(id3.getDetails().get(j).contains(name))
+                    searched.add(songs.get(i));
+
+            }
         }
-        return null;
+        return searched;
     }
 
     protected void createPartControl() {
@@ -39,7 +48,7 @@ public class SearchPanel extends JPanel {
         this.setBorder(BorderFactory.createEmptyBorder(6, 6, 6, 1000));
 
        // JLabel findLabel = new JLabel();
-        searchIcon = new JLabel(new  ImageIcon(new ImageIcon("C:\\Users\\LENOVO\\Desktop\\JPotify\\JPotify\\src\\icons\\search.png").getImage().getScaledInstance(17, 17, Image.SCALE_DEFAULT)));
+        searchIcon = new JLabel(new  ImageIcon(new ImageIcon("C:\\Users\\LENOVO\\Desktop\\JPotify\\JPotify\\src\\App\\icons\\search.png").getImage().getScaledInstance(17, 17, Image.SCALE_DEFAULT)));
         // findLabel.setBackground(Color.GRAY);
 
         this.add(searchIcon);
@@ -59,14 +68,19 @@ public class SearchPanel extends JPanel {
             @Override
             public void actionPerformed(ActionEvent event) {
                 if(event.getSource() == findButton){
-                    Song song = null;
+                    ArrayList<Song> found = null;
                     try {
-                        song = searchBySong(findTextField.getText());
+                        found = searchBySong(findTextField.getText());
+                    } catch (InvalidDataException e) {
+                        e.printStackTrace();
                     } catch (IOException e) {
                         e.printStackTrace();
+                    } catch (UnsupportedTagException e) {
+                        e.printStackTrace();
                     }
-                    if(song ==null) System.out.println("naaaaaaaaaa");
-                    System.out.println(song.getName()+"  "+song.getPath());
+                    if(found ==null) System.out.println("naaaaaaaaaa");
+                    for (int i=0;i<found.size();i++)
+                        System.out.println(found.get(i).getName()+"  "+found.get(i).getPath());
 
                 }
             }
