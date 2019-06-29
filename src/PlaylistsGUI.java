@@ -1,5 +1,6 @@
 import com.mpatric.mp3agic.InvalidDataException;
 import com.mpatric.mp3agic.UnsupportedTagException;
+import com.sun.tools.jconsole.JConsoleContext;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -25,13 +26,18 @@ public class PlaylistsGUI extends JPanel {
     //  private JLabel label;
     private Border emptyBorder;
     private PlayList playlist;
+    private JTextArea song1;
+    private JTextArea song2;
 
     private ArrayList<JButton> songButtons;
     private JTextArea details;
     private JButton addSong;
+    private JButton sortSong;
     private  int size2;
     private  ArrayList songs;
     private Handler handler;
+    private ImageIcon removeIcon;
+    private ArrayList<JButton>  removeSongs;
 
 
 
@@ -46,6 +52,8 @@ public class PlaylistsGUI extends JPanel {
 
 
     public PlaylistsGUI(PlayList playlist) throws InvalidDataException, IOException, UnsupportedTagException {
+        removeIcon = new ImageIcon(new ImageIcon("src\\icons\\remove.png").getImage().getScaledInstance(20, 20, Image.SCALE_DEFAULT));
+
         this.playlist = playlist;
         handler = new Handler();
 
@@ -78,14 +86,27 @@ public class PlaylistsGUI extends JPanel {
 
     public void finalSet(ArrayList songs,int size2) throws InvalidDataException, IOException, UnsupportedTagException {
         songButtons = new ArrayList<>(size2);
+        removeSongs = new ArrayList<>(size2);
         for (int i = 0; i < size2; i++) {
+            JButton button1 = new JButton();
+            button1.setIcon(removeIcon);
+            button1.setBackground(new Color(20,20,20));
+            button1.setToolTipText("Remove song from playlist");
+            button1.setPreferredSize(new Dimension(20,20));
+            button1.setSize(new Dimension(20,20));
+            button1.setSize(20,20);
+            button1.setBorder(BorderFactory.createEmptyBorder());
+            removeSongs.add(button1);
+
+
             JButton button = new JButton();
-            button.setLayout(new GridLayout(2, 1));
+            button.setLayout(new GridLayout(3, 1));
             songButtons.add(button);
         }
 
         for (int i = 0; i < size2; i++) {
             songButtons.get(i).addActionListener(handler);
+            removeSongs.get(i).addActionListener(handler);
         }
 
 
@@ -110,6 +131,7 @@ public class PlaylistsGUI extends JPanel {
             songButtons.get(i).add(details);
 
             songButtons.get(i).setBackground(new Color(20, 20, 20));
+            songButtons.get(i).add(removeSongs.get(i));
 
             this.add(songButtons.get(i));
         }
@@ -118,6 +140,29 @@ public class PlaylistsGUI extends JPanel {
         addSong.setPreferredSize(new Dimension(120, 200));
         addSong.setForeground(Color.WHITE);
         addSong.addActionListener(handler);
+
+        sortSong = new JButton();
+        sortSong.setToolTipText("change place of two songs");
+        sortSong.setLayout(new GridLayout(0,1));
+        JLabel jLabel1 = new JLabel("Change place of", SwingConstants.CENTER);
+        jLabel1.setForeground(Color.WHITE);
+        jLabel1.setBackground(new Color(20,20,20));
+        JLabel jLabel2 = new JLabel("And",SwingConstants.CENTER);
+        jLabel2.setForeground(Color.WHITE);
+        jLabel2.setBackground(new Color(20,20,20));
+         song1 = new JTextArea();
+        song1.setBackground(Color.lightGray);
+         song2 = new JTextArea();
+        song2.setBackground(Color.lightGray);
+       sortSong.add(jLabel1);
+       sortSong.add(song1);
+       sortSong.add(jLabel2);
+       sortSong.add(song2);
+        sortSong.setBackground(new Color(20, 20, 20));
+        sortSong.setPreferredSize(new Dimension(120, 200));
+        sortSong.setForeground(Color.WHITE);
+        sortSong.addActionListener(handler);
+
         if(size2==0){
             this.removeAll();
             middlePage.removeAll();
@@ -125,6 +170,7 @@ public class PlaylistsGUI extends JPanel {
 
         }
         this.add(addSong);
+        this.add(sortSong);
         middlePage.getAlbumsInLibrary().removeAll();
         middlePage.getSongsInLibrary().removeAll();
         middlePage.getSongsInAlbum().removeAll();
@@ -173,6 +219,65 @@ public class PlaylistsGUI extends JPanel {
 
         @Override
         public void actionPerformed(ActionEvent e) {
+            for (int i = 0; i <removeSongs.size() ; i++) {
+                if(e.getSource()==removeSongs.get(i)){
+                    System.out.println(i);
+                    if(playlist.getName().equals("Favorite")){
+                        try {
+                            ArrayList songs = Songs.reafSongsFromFile("src\\playlists\\Favorite.bin");
+                            songs.remove(i);
+
+                            Songs.writeSongsToFile(songs,"src\\playlists\\Favorite.bin");
+                            setMiddleForFavorite();
+                        } catch (IOException ex) {
+                            ex.printStackTrace();
+                        } catch (InvalidDataException ex) {
+                            ex.printStackTrace();
+                        } catch (UnsupportedTagException ex) {
+                            ex.printStackTrace();
+                        }
+                    }
+                    if(playlist.getName().equals("Shared")){
+                        try {
+                            ArrayList songs = Songs.reafSongsFromFile("src\\playlists\\Shared.bin");
+                            songs.remove(i);
+
+                            Songs.writeSongsToFile(songs,"src\\playlists\\Shared.bin");
+                            setMiddleForShared();
+                        } catch (IOException ex) {
+                            ex.printStackTrace();
+                        } catch (InvalidDataException ex) {
+                            ex.printStackTrace();
+                        } catch (UnsupportedTagException ex) {
+                            ex.printStackTrace();
+                        }
+                    }
+
+                    else{
+                        try {
+                            ArrayList playlists = Songs.reafPlayListFromFile("src\\playlists\\playlists.bin");
+                            for (int j = 0; j < playlists.size(); j++) {
+                                if(((PlayList)playlists.get(j)).getName().equals(playlist.getName())){
+                                    ArrayList songs = ((PlayList)playlists.get(j)).getPlayListSongs();
+                                    songs.remove(i);
+                                    ((PlayList)playlists.get(j)).setPlayListSongs(songs);
+                                    playlists.set(j,((PlayList)playlists.get(j)));
+                                    Songs.writeLibrariesToFile(playlists,"src\\playlists\\playlists.bin");
+                                    setMiddlePageButtons(playlist);
+                                }
+                            }
+                        } catch (IOException ex) {
+                            ex.printStackTrace();
+                        } catch (InvalidDataException ex) {
+                            ex.printStackTrace();
+                        } catch (UnsupportedTagException ex) {
+                            ex.printStackTrace();
+                        }
+                    }
+
+
+                }
+            }
 
             for (int i = 0; i < size2; i++) {
                 if (e.getSource() == songButtons.get(i)) {
@@ -196,6 +301,76 @@ public class PlaylistsGUI extends JPanel {
 
                 }
             }
+
+            if(e.getSource()==sortSong){
+                int firstIndex = Integer.parseInt(song1.getText());
+                int secondIndex = Integer.parseInt(song2.getText());
+                if(playlist.getName().equals("Favorite")){
+                    try {
+                        ArrayList songs = Songs.reafSongsFromFile("src\\playlists\\Favorite.bin");
+                        Song song1 = (Song) songs.get(firstIndex);
+                        Song song2 = (Song) songs.get(secondIndex);
+                        songs.set(firstIndex,song2);
+                        songs.set(secondIndex,song1);
+                        Songs.writeSongsToFile(songs,"src\\playlists\\Favorite.bin");
+                        setMiddleForFavorite();
+                    } catch (IOException ex) {
+                        ex.printStackTrace();
+                    } catch (InvalidDataException ex) {
+                        ex.printStackTrace();
+                    } catch (UnsupportedTagException ex) {
+                        ex.printStackTrace();
+                    }
+                }
+                else if(playlist.getName().equals("Shared")){
+                    ArrayList songs = null;
+                    try {
+                        songs = Songs.reafSongsFromFile("src\\playlists\\Shared.bin");
+                    } catch (IOException ex) {
+                        ex.printStackTrace();
+                    }
+                    Song song1 = (Song) songs.get(firstIndex);
+                    Song song2 = (Song) songs.get(secondIndex);
+                    songs.set(firstIndex,song2);
+                    songs.set(secondIndex,song1);
+                    Songs.writeSongsToFile(songs,"src\\playlists\\Shared.bin");
+                    try {
+                        setMiddleForShared();
+                    } catch (IOException ex) {
+                        ex.printStackTrace();
+                    } catch (InvalidDataException ex) {
+                        ex.printStackTrace();
+                    } catch (UnsupportedTagException ex) {
+                        ex.printStackTrace();
+                    }
+                }
+                else{
+                    try {
+                        ArrayList playlists = Songs.reafPlayListFromFile("src\\playlists\\playlists.bin");
+                        for (int i = 0; i < playlists.size(); i++) {
+                            if(((PlayList)(playlists.get(i))).getName().equals(playlist.getName())){
+                                ArrayList songs = ((PlayList)(playlists.get(i))).getPlayListSongs();
+                                Song song1 = (Song) songs.get(firstIndex);
+                                Song song2 = (Song) songs.get(secondIndex);
+                                songs.set(firstIndex,song2);
+                                songs.set(secondIndex,song1);
+                                ((PlayList)(playlists.get(i))).setPlayListSongs(songs);
+                                playlists.set(i,((PlayList)(playlists.get(i))));
+                                Songs.writeLibrariesToFile(playlists,"src\\playlists\\playlists.bin");
+                                setMiddlePageButtons(playlist);
+                            }
+                        }
+                    } catch (IOException ex) {
+                        ex.printStackTrace();
+                    } catch (InvalidDataException ex) {
+                        ex.printStackTrace();
+                    } catch (UnsupportedTagException ex) {
+                        ex.printStackTrace();
+                    }
+                }
+
+            }
+
             if (e.getSource() == addSong) {
                 JFrame frame = new JFrame("add new song to playlist");
                 frame.setSize(900,700);
@@ -225,6 +400,9 @@ public class PlaylistsGUI extends JPanel {
                     songs.get(i).addActionListener(new ActionListener() {
                         @Override
                         public void actionPerformed(ActionEvent evt) {
+
+
+
                             if (!playlist.getName().equals("Favorite") && !(playlist.getName().equals("Shared"))) {
                                 System.out.println(finalI + "****************************************");
                                 try {
