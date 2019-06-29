@@ -12,9 +12,13 @@ import javax.swing.*;
 
 public class SearchPanel extends JPanel {
 
+    public static MiddlePage middlePage;
     private JLabel searchIcon;
 
     private JTextField findTextField;
+    private ArrayList<JButton>songs;
+
+
 
 
 
@@ -23,6 +27,55 @@ public class SearchPanel extends JPanel {
         //  this.model = model;
         createPartControl();
     }
+
+
+
+    private void setMiddleAfterFound(ArrayList<Song> found) throws InvalidDataException, IOException, UnsupportedTagException {
+        middlePage.removeAll();
+
+        ArrayList fileOfSongs;
+        fileOfSongs = found;
+        if (fileOfSongs == null) fileOfSongs = new ArrayList();
+        songs = new ArrayList<JButton>(fileOfSongs.size());
+        for (int i = 0; i < fileOfSongs.size(); i++) {
+            JButton button = new JButton();
+            button.setLayout(new GridLayout(2, 1));
+            songs.add(button);
+        }
+        Handler handler = new Handler();
+
+        for (int i = 0; i < songs.size(); i++) {
+            songs.get(i).addActionListener(handler);
+        }
+        for (int i = 0; i < fileOfSongs.size(); i++) {
+            JTextArea details;
+            GetID3 id3;
+            details = new JTextArea();
+            details.setBackground(new Color(20, 20, 20));
+            details.setForeground(Color.WHITE);
+            Song song = (Song) fileOfSongs.get(i);
+            id3 = new GetID3(song.getPath());
+            Image newImage = id3.getImg().getScaledInstance(150, 150, Image.SCALE_SMOOTH);
+            for (int j = 0; j < id3.getDetails().size() - 2; j++) {
+                // temp += id3.getDetails().get(i);
+                details.append(id3.getDetails().get(j));
+                details.append("\n");
+
+            }
+
+            JLabel artWork = new JLabel();
+            artWork.setIcon(new ImageIcon(newImage));
+            songs.get(i).add(artWork);
+            songs.get(i).add(details);
+
+            songs.get(i).setBackground(new Color(20, 20, 20));
+
+            middlePage.add(songs.get(i));
+            middlePage.revalidate();
+
+        }
+    }
+
     public ArrayList<Song> searchBySong(String name) throws InvalidDataException, IOException, UnsupportedTagException {
         ArrayList<Song> songs = (ArrayList<Song>) Songs.reafSongsFromFile("src\\songs\\song.bin");
         ArrayList<Song> searched = new ArrayList<>();
@@ -70,6 +123,9 @@ public class SearchPanel extends JPanel {
                     ArrayList<Song> found = null;
                     try {
                         found = searchBySong(findTextField.getText());
+                        setMiddleAfterFound(found);
+
+
                     } catch (InvalidDataException e) {
                         e.printStackTrace();
                     } catch (IOException e) {
@@ -89,4 +145,30 @@ public class SearchPanel extends JPanel {
 
 
 
+    public class Handler implements ActionListener {
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            for (int i = 0; i <songs.size() ; i++) {
+                if(e.getSource()==songs.get(i)){
+                    try {
+                        ArrayList fileOfSongs = Songs.reafSongsFromFile("src\\songs\\song.bin");
+                        for (int j = 0; j <fileOfSongs.size() ; j++) {
+                            if(((Song)(fileOfSongs.get(j))).getName().equals(songs.get(i))){
+
+                                SongbarGUI.setSongNum(j);
+
+                                SongbarGUI.nextOrPrev();
+                                ((Song)fileOfSongs.get(j)).setTimePlayed();
+                            }
+                        }
+                    } catch (IOException ex) {
+                        ex.printStackTrace();
+                    }
+
+                }
+            }
+        }
+    }
 }
+

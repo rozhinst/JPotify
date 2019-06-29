@@ -19,7 +19,7 @@ public class MainFrame extends JFrame {
     private MiddlePage middlePage;
     private PlayListGUI playList;
     private JButton albumsButton;
-    private JPanel searchPanel;
+    private SearchPanel searchPanel;
 
     public MainFrame() throws IOException, InvalidDataException, UnsupportedTagException {
         super();
@@ -31,6 +31,7 @@ public class MainFrame extends JFrame {
         this.setLocation(X,Y);
         this.getContentPane().setBackground(new Color( 20,20,20) );
         searchPanel = new SearchPanel();
+        // searchPanel.setMiddlePage(middlePage);
         library = new LibraryGUI();
         library.setBorder(emptyBorder);
        // playList = new PlayListGUI();
@@ -72,5 +73,6 @@ public class MainFrame extends JFrame {
 class Main{
     public static void main(String[] args) throws IOException, InvalidDataException, UnsupportedTagException {
         MainFrame frame = new MainFrame();
+        SearchPanel.middlePage=(LibraryGUI.middlePage);
     }
 }

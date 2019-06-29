@@ -12,6 +12,7 @@ import java.util.ArrayList;
 
 public class LibraryGUI extends JPanel {
 
+    public static MiddlePage middlePage;
     private ImageIcon newPlaylistIcon;
     private ImageIcon songIcon;
     private ImageIcon albumIcon;
@@ -28,7 +29,7 @@ public class LibraryGUI extends JPanel {
     private JFrame nameFrame;
     private JTextArea getName;
 
-    private MiddlePage middlePage;
+
     private Handler hanler2;
     private JLabel label2;
     private PlayList favorite;
