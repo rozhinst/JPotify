@@ -17,6 +17,8 @@ public class SearchPanel extends JPanel {
 
     private JTextField findTextField;
     private ArrayList<JButton>songs;
+    private Handler hanldler;
+    private ArrayList<Song> foundSongs;
 
 
 
@@ -33,27 +35,27 @@ public class SearchPanel extends JPanel {
     private void setMiddleAfterFound(ArrayList<Song> found) throws InvalidDataException, IOException, UnsupportedTagException {
         middlePage.removeAll();
 
-        ArrayList fileOfSongs;
-        fileOfSongs = found;
-        if (fileOfSongs == null) fileOfSongs = new ArrayList();
-        songs = new ArrayList<JButton>(fileOfSongs.size());
-        for (int i = 0; i < fileOfSongs.size(); i++) {
+
+        foundSongs = found;
+        if (foundSongs == null) foundSongs = new ArrayList();
+        songs = new ArrayList<JButton>(foundSongs.size());
+        for (int i = 0; i < foundSongs.size(); i++) {
             JButton button = new JButton();
             button.setLayout(new GridLayout(2, 1));
             songs.add(button);
         }
-        Handler handler = new Handler();
+         hanldler = new Handler();
 
         for (int i = 0; i < songs.size(); i++) {
-            songs.get(i).addActionListener(handler);
+            songs.get(i).addActionListener(hanldler);
         }
-        for (int i = 0; i < fileOfSongs.size(); i++) {
+        for (int i = 0; i < foundSongs.size(); i++) {
             JTextArea details;
             GetID3 id3;
             details = new JTextArea();
             details.setBackground(new Color(20, 20, 20));
             details.setForeground(Color.WHITE);
-            Song song = (Song) fileOfSongs.get(i);
+            Song song = (Song) foundSongs.get(i);
             id3 = new GetID3(song.getPath());
             Image newImage = id3.getImg().getScaledInstance(150, 150, Image.SCALE_SMOOTH);
             for (int j = 0; j < id3.getDetails().size() - 2; j++) {
@@ -151,10 +153,12 @@ public class SearchPanel extends JPanel {
         public void actionPerformed(ActionEvent e) {
             for (int i = 0; i <songs.size() ; i++) {
                 if(e.getSource()==songs.get(i)){
+                    System.out.println(i);
                     try {
-                        ArrayList fileOfSongs = Songs.reafSongsFromFile("src\\songs\\song.bin");
-                        for (int j = 0; j <fileOfSongs.size() ; j++) {
-                            if(((Song)(fileOfSongs.get(j))).getName().equals(songs.get(i))){
+                        ArrayList fileOfSongs = Songs.reafSongsFromFile("src\\App\\songs\\song.bin");
+
+                        for (int j = 0; j <fileOfSongs.size(); j++) {
+                            if(((Song)(fileOfSongs.get(j))).getName().equals(((Song)(foundSongs.get(i))).getName())){
 
                                 SongbarGUI.setSongNum(j);
 
