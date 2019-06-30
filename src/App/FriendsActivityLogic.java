@@ -14,14 +14,14 @@ public class FriendsActivityLogic implements Runnable {
     }
      synchronized public void setRecentlyPlayed(String songName,String friendName){
          System.out.println("1");
-         friends =(HashMap<String, String>) Songs.reafFromFile("C:\\Users\\LENOVO\\Desktop\\JPotify\\JPotify\\src\\App\\songs\\friends.bin");
+         friends =(HashMap<String, String>) Songs.reafFromFile("src\\App\\songs\\friends.bin");
                 if(friends == null) friends = new HashMap<>();
                 if(!friends.containsKey(friendName))
                     friends.put(friendName,songName);
                 else friends.replace(friendName,songName);
                 if(friends.containsKey(MainFrame.name)) friends.remove(MainFrame.name);
                 for(String n : friends.keySet()) System.out.println(n);
-                Songs.writeToFile(friends,"C:\\Users\\LENOVO\\Desktop\\JPotify\\JPotify\\src\\App\\songs\\friends.bin");
+                Songs.writeToFile(friends,"src\\App\\songs\\friends.bin");
          System.out.println("2");
                 FriendsActivityGUI.getInstance().setFriends(getFriends());
          System.out.println("rad shod");
