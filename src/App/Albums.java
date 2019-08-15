@@ -14,13 +14,9 @@ public class Albums extends Songs implements Serializable {
     public Albums() {
         super();
         albumSong = new ArrayList<>();
-       // albumSong
-        ///yadet bashe aval song be album basheha!!!!
+
     }
-//    public static Albums manageAlbum(Song song) throws InvalidDataException, IOException, UnsupportedTagException {
-//
-//       // return  albums1;
-//    }
+
     public void setId3(GetID3 id3){
         String[] s = id3.getDetails().get(1).split(":");
         name = s[1] ;

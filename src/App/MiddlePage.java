@@ -221,9 +221,16 @@ public class MiddlePage extends JPanel {
                     if (e.getSource() == songs.get(i) ) {
                         System.out.println("e peresssed  " + i);
                         SongbarGUI.setSongNum(i);
+                        SongbarGUI.setFilePath( fileOfSongs);
 
                         SongbarGUI.nextOrPrev();
                         ((Song)fileOfSongs.get(i)).setTimePlayed();
+                        try {
+                            Songs.orderingSongs();
+                            repaint();
+                        } catch (IOException ex) {
+                            ex.printStackTrace();
+                        }
 
                     }
                 }
@@ -281,6 +288,7 @@ public class MiddlePage extends JPanel {
                 }
             }
             if(source.equals("songOfAlbum")) {
+                int index = 0;
                 songName = new String();
                 for (int j = 0; j < songsOfAlbum.size(); j++) {
                     if (e.getSource() == songsOfAlbum.get(j)) {
@@ -289,6 +297,7 @@ public class MiddlePage extends JPanel {
                         System.out.println(j);
                         for(int k=0;k<fileOfSongs.size();k++){
                             if (((Song)(fileOfSongs.get(k))).getName().equals(((Song)(songArrayList.get(j))).getName())){
+                                index= j;
                                 System.out.println(((Song)(fileOfSongs.get(k))).getName());
                                 songName = ((Song)(fileOfSongs.get(k))).getName();
 //                                SongbarGUI.setSongNum(k);
@@ -314,9 +323,17 @@ public class MiddlePage extends JPanel {
 
                       //  SongbarGUI.setFilePath(songsOfAlbum);
                        // System.out.println(fileOfSongs.);
-                        SongbarGUI.setSongNum(i);
+                        SongbarGUI.setSongNum(index);
+                        SongbarGUI.setFilePath(songArrayList);
                         SongbarGUI.nextOrPrev();
                         ((Song)(fileOfSongs.get(i))).setTimePlayed();
+                        try {
+                            Songs.orderingSongs();
+
+                            repaint();
+                        } catch (IOException ex) {
+                            ex.printStackTrace();
+                        }
 
                     }
                 }

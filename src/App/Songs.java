@@ -5,20 +5,19 @@ import com.mpatric.mp3agic.UnsupportedTagException;
 import javax.swing.*;
 import java.io.*;
 import java.util.ArrayList;
-import java.util.HashMap;
+
 
 public class Songs implements Serializable {
-    //private static final String filepath = "C:\\Users\\LENOVO\\Desktop\\JPotify\\JPotify\\src\\songs\\song.txt";
     private JFileChooser chooser;
     private ArrayList songs;
     private String path;
 
-    //private ArrayList<String> songNames;
+
     public Songs() {
         songs = new ArrayList();
         chooser = new JFileChooser("src");
         chooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
-        //songNames = new ArrayList<>();
+
     }
 
     public Song addSong(ArrayList array) throws InvalidDataException, IOException, UnsupportedTagException {
@@ -46,10 +45,7 @@ public class Songs implements Serializable {
         return songs;
     }
 
-    //    //public ArrayList getSongname(){
-//        return songNames;
-//    }
-    // public void setPath()
+
 
 
     //it can also be used for playlist
@@ -111,7 +107,6 @@ public class Songs implements Serializable {
             objectIn = new ObjectInputStream(fileIn);
             while (true)
                 temp.add((Albums) objectIn.readObject());
-//            System.out.println("The Object has been read from the file");
 
         } catch (EOFException ex) {
             objectIn.close();
@@ -132,7 +127,6 @@ public class Songs implements Serializable {
             objectIn = new ObjectInputStream(fileIn);
             while (true)
                 temp.add((PlayList) objectIn.readObject());
-//            System.out.println("The Object has been read from the file");
 
         } catch (EOFException ex) {
             objectIn.close();
@@ -154,7 +148,6 @@ public class Songs implements Serializable {
             objectIn = new ObjectInputStream(fileIn);
             while (true)
                 temp.add((Song) objectIn.readObject());
-//            System.out.println("The Object has been read from the file");
 
         } catch (EOFException ex) {
             objectIn.close();
@@ -209,7 +202,7 @@ public class Songs implements Serializable {
         }
         for (int i = 0; i < songs.size(); i++)
             albums.add(songs.get(i).getAlbum());
-      Songs.writeSongsToFile(songs, "src\\App\\songs\\song.bin");
+        Songs.writeSongsToFile(songs, "src\\App\\songs\\song.bin");
     }
 
 

@@ -292,11 +292,17 @@ public class PlaylistsGUI extends JPanel {
 
                     for (int j = 0; j <songs2.size() ; j++) {
                         if(((Song)(songs2.get(j))).getName().equals( ((Song)songs.get(i)).getName())){
-                            SongbarGUI.setSongNum(j);
+                            SongbarGUI.setSongNum(i);
 
-
+                            SongbarGUI.setFilePath(songs);
                             SongbarGUI.nextOrPrev();
                             ((Song)songs2.get(j)).setTimePlayed();
+                            try {
+                                Songs.orderingSongs();
+                                middlePage.repaint();
+                            } catch (IOException ex) {
+                                ex.printStackTrace();
+                            }
                         }
                     }
 

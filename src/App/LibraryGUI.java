@@ -562,12 +562,20 @@ public class LibraryGUI extends JPanel {
 
             if (e.getSource() == song) {
                 middlePage.removeAll();
+                middlePage.repaint();
+                try {
+                    ArrayList<Song> songArrayList = (ArrayList<Song>) Songs.reafSongsFromFile("src\\App\\songs\\song.bin");
+                    SongbarGUI.setFilePath(songArrayList);
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
 
                 //  middlePage.
                 // middlePage.getSongsInLibrary().revalidate();
 
                 try {
                     Songs.orderingSongs();
+
                 } catch (IOException ex) {
                     ex.printStackTrace();
                 }
@@ -582,6 +590,7 @@ public class LibraryGUI extends JPanel {
 
                 try {
                     Songs.orderingSongs();
+                    middlePage.repaint();
                 } catch (IOException ex) {
                     ex.printStackTrace();
                 }

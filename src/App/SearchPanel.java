@@ -35,6 +35,7 @@ public class SearchPanel extends JPanel {
 
     private void setMiddleAfterFound(ArrayList<Song> found) throws InvalidDataException, IOException, UnsupportedTagException {
         middlePage.removeAll();
+        middlePage.repaint();
 
 
         foundSongs = found;
@@ -161,10 +162,13 @@ public class SearchPanel extends JPanel {
                         for (int j = 0; j <fileOfSongs.size(); j++) {
                             if(((Song)(fileOfSongs.get(j))).getName().equals(((Song)(foundSongs.get(i))).getName())){
 
-                                SongbarGUI.setSongNum(j);
+                                SongbarGUI.setSongNum(i);
+                                SongbarGUI.setFilePath(foundSongs);
 
                                 SongbarGUI.nextOrPrev();
                                 ((Song)fileOfSongs.get(j)).setTimePlayed();
+                                Songs.orderingSongs();
+                                middlePage.repaint();
                             }
                         }
                     } catch (IOException ex) {
