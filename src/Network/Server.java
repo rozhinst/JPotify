@@ -10,7 +10,7 @@ import java.util.Map;
 
 public class Server implements  Runnable{
     ServerSocket mServer;
-    int serverPort = 2220;
+    int serverPort = 1234;
     ArrayList<Thread> threads = new ArrayList<Thread>();
     int limit = 100;
     HashMap<String,ClientManager> clientsMap=new HashMap<String, ClientManager>();

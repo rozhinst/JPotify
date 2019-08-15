@@ -29,7 +29,7 @@ public class MainFrame extends JFrame {
     public MainFrame() throws IOException, InvalidDataException, UnsupportedTagException {
         super();
         client = new Client(this);
-        client.setName("ro");
+        client.setName("rozhin");
         name = client.getName();
         Server.clients.put(name,client);
         new Thread(client).start();
